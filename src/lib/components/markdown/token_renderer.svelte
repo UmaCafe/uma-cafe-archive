@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { getImageUrl } from '$lib/content';
 	import type { Token } from 'marked';
-	import Heading from './markdown/heading.svelte';
-	import List from './markdown/list.svelte';
-	import Paragraph from './markdown/paragraph.svelte';
-	import Table from './markdown/table.svelte';
+	import Heading from './heading.svelte';
+	import List from './list.svelte';
+	import Paragraph from './paragraph.svelte';
+	import Table from './table.svelte';
 	export let tokens: Array<Token>;
 </script>
 

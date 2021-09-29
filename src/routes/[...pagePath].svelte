@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import TokenRenderer from '$lib/components/token_renderer.svelte';
+	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import marked from 'marked';
 
 	export let markdown: string;

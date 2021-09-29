@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Tokens } from 'marked';
-	import TokenRenderer from '../token_renderer.svelte';
+	import TokenRenderer from './token_renderer.svelte';
 
 	export let header: Array<Tokens.TableCell>;
 	export let rows: Array<Array<Tokens.TableCell>>;
