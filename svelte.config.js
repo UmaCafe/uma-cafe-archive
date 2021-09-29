@@ -6,7 +6,10 @@ const config = {
 	preprocess: preprocess(),
 	kit: {
 		target: '#root',
-		adapter: node({})
+		adapter: node({}),
+		files: {
+			assets: 'content/public'
+		}
 	}
 };
 
