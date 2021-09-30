@@ -1,6 +1,5 @@
 FROM node:16 AS build
 COPY . .
-RUN npm run update
 RUN npm install
 RUN npm run build
 
