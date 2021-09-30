@@ -31,6 +31,7 @@
 	"type": "module",
 	"dependencies": {
 		"front-matter": "^4.0.2",
-		"marked": "^3.0.4"
+		"marked": "^3.0.4",
+		"svelte-particles": "^1.18.2"
 	}
 }
