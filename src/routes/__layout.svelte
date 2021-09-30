@@ -125,9 +125,10 @@
 	}
 
 	.content-box {
-		background-color: #f2f2ff;
+		background-color: #f5f5ff;
 		border-top-left-radius: 20px;
 		border-top-right-radius: 20px;
+		box-shadow: 10px 10px 20px #ccd, -10px 10px 20px #ccd;
 		color: #222;
 		width: 100%;
 		padding-left: 1rem;
@@ -143,6 +144,7 @@
 	nav .container {
 		display: flex;
 		margin-top: 2rem;
+		margin-bottom: 1rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
 	}
