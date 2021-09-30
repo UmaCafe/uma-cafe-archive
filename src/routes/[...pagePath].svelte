@@ -1,9 +1,14 @@
 <script lang="ts" context="module">
+	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
+	import Metadata from '$lib/components/metadata.svelte';
 	import { getPageMarkdown } from '$lib/content';
 	import type { Load } from '@sveltejs/kit';
+	import frontmatter from 'front-matter';
+	import marked from 'marked';
 
 	export const load: Load = async ({ page }) => {
-		const path = page.params.pagePath;
+		let path = page.params.pagePath;
+		if (path == '') path = 'index';
 		const markdown = await getPageMarkdown(path);
 		if (markdown) {
 			return {
@@ -12,16 +17,26 @@
 				}
 			};
 		}
+		return { error: 'Page not found', status: 404 };
 	};
 </script>
 
 <script lang="ts">
-	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
-	import marked from 'marked';
-
 	export let markdown: string;
 
-	$: lexed = marked.lexer(markdown);
+	$: data = frontmatter(markdown);
+
+	type PageAttribs = {
+		layout: string;
+		title: string;
+		description: string;
+	};
+
+	$: meta = data.attributes as PageAttribs;
+
+	$: lexed = marked.lexer(data.body);
 </script>
+
+<Metadata title={meta.title} description={meta.description} />
 
 <TokenRenderer tokens={lexed} />

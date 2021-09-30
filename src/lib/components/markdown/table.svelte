@@ -17,10 +17,9 @@
 		{#each rows as row}
 			<tr>
 				{#each row as cell, i}
-					<!-- For some reason it thinks align doesnt exist -->
-					{@html `<td align="${align[i] ?? 'center'}">`}<TokenRenderer
-						tokens={cell.tokens}
-					/>{@html `</td>`}
+					<td style={align[i] ? `text-align: ${align[i]};` : undefined}
+						><TokenRenderer tokens={cell.tokens} /></td
+					>
 				{/each}
 			</tr>
 		{/each}
