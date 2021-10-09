@@ -139,6 +139,7 @@
 	.content {
 		display: inline-block;
 		width: 100%;
+		padding-bottom: 2rem;
 	}
 
 	nav .container {
