@@ -8,7 +8,6 @@
 
 	export const load: Load = async ({ page }) => {
 		let path = page.params.pagePath;
-		if (path == '') path = 'index';
 		const markdown = await getPageMarkdown(path);
 		if (markdown) {
 			return {
@@ -27,9 +26,9 @@
 	$: data = frontmatter(markdown);
 
 	type PageAttribs = {
-		layout: string;
-		title: string;
-		description: string;
+		layout?: string | undefined;
+		title?: string | undefined;
+		description?: string | undefined;
 	};
 
 	$: meta = data.attributes as PageAttribs;

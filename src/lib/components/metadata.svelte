@@ -8,7 +8,7 @@
 	export let image: string = undefined;
 
 	$: url = `${$page.host}${$page.path}`;
-	$: displayTitle = `${title} - Uma Cafe`;
+	$: displayTitle = title ? `${title} - Uma Cafe` : `Uma Cafe`;
 </script>
 
 <svelte:head>
