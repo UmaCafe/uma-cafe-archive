@@ -26,7 +26,7 @@
 	$: data = frontmatter(markdown);
 
 	type PageAttribs = {
-		layout?: string | undefined;
+		layout?: 'raw' | undefined;
 		title?: string | undefined;
 		description?: string | undefined;
 	};

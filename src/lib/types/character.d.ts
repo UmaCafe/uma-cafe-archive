@@ -5,13 +5,13 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type ImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto";
+export type ImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto" | "icon";
 
 export interface CharacterInfo {
   /**
    * Basic character information
    */
-  info?: {
+  info: {
     name: {
       native: string;
       translated: string;
@@ -24,6 +24,21 @@ export interface CharacterInfo {
      * The internal game ID of the character
      */
     gameId?: number;
+    /**
+     * Misc. info from the game
+     */
+    info?: {
+      intro?: string;
+      dorm?: string;
+      class?: string;
+      weight?: string;
+      strength?: string;
+      weakness?: string;
+      shoeSize?: string;
+      onEars?: string;
+      onTail?: string;
+      onFamily?: string;
+    };
     /**
      * Information about the character's seiyuu
      */
@@ -39,7 +54,16 @@ export interface CharacterInfo {
      * Information about the real-life counterpart of the character
      */
     counterpart?: {
-      sex?: "male" | "female" | "intersex";
+      sex?: "male" | "female";
+      record?: {
+        total: number;
+        wins: number;
+      };
+      notableRaces?: {
+        name: string;
+        year: number;
+        place: number;
+      }[];
       wikipediaUrlJP?: string;
       wikipediaUrlEN?: string;
       netkeibaUrl?: string;
@@ -72,7 +96,7 @@ export interface CharacterInfo {
   /**
    * List of images of the character
    */
-  images?: {
+  images: {
     tag: ImageTag;
     /**
      * File path to the image relative to the /public/images folder

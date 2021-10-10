@@ -39,14 +39,19 @@ export async function getPageMarkdown(page: string): Promise<string | null> {
 	return null;
 }
 
+/**
+ * @param charId The reference ID of the character
+ * @returns Character info object for the character
+ */
 export async function getCharacterInfo(charId: string): Promise<CharacterInfo | null> {
-	if (charId == '_template') return null;
 	if (!browser) {
 		const { readFileSync, existsSync } = await import('fs');
 		const filePath = `content/data/characters/${charId}.json`;
 		if (existsSync(filePath)) {
-			const data = readFileSync(filePath, 'utf-8');
-			return JSON.parse(data) as CharacterInfo;
+			const json = readFileSync(filePath, 'utf-8');
+			const data = JSON.parse(json);
+			delete data['$schema'];
+			return data as CharacterInfo;
 		}
 	} else {
 		const resp = await fetch(`/api/character?id=${charId}`);
@@ -57,12 +62,15 @@ export async function getCharacterInfo(charId: string): Promise<CharacterInfo | 
 	return null;
 }
 
+/**
+ * Transforms the images from character info into a map with URLs for easier access
+ * @param charInfo Character info object
+ * @returns Map from image tag to URL
+ */
 export function getImageMap(charInfo: CharacterInfo): Map<ImageTag, string> {
 	const map = new Map<ImageTag, string>();
-	if (charInfo.images) {
-		charInfo.images.forEach((img) => {
-			map.set(img.tag, getImageUrl(img.file));
-		});
-	}
+	charInfo.images.forEach((img) => {
+		map.set(img.tag, getImageUrl(img.file));
+	});
 	return map;
 }

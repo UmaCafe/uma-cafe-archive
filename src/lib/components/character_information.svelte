@@ -1,6 +1,7 @@
 <script type="ts">
 	import { getImageMap } from '$lib/content';
 	import type { CharacterInfo, ImageTag } from '$lib/types/character';
+	import { ordinalNumber } from '$lib/util';
 	import Selector from './selector.svelte';
 
 	export let charInfo: CharacterInfo;
@@ -31,12 +32,15 @@
 	let imageDisplay: ImageTag;
 </script>
 
-<div class="info-panel" style="--color-main: #{info.colors.main}; --color-sub: #{info.colors.sub};">
+<div
+	class="info-panel"
+	style="--color-main: #{info.colors?.main ?? 'ddf'}; --color-sub: #{info.colors?.sub ?? 'ccd'};"
+>
 	<div class="title">
 		<h1>{info.name.translated}</h1>
 		<h2>{info.name.native}</h2>
 	</div>
-	<div class="main" style="border-color: #{info.colors.main};">
+	<div class="main">
 		<div class="image">
 			<div style="text-align: center;">
 				<Selector items={imageValues} bind:value={imageDisplay} />
@@ -45,6 +49,9 @@
 		</div>
 		<div class="desc">
 			<div>
+				{#if info.info?.intro}
+					<p class="intro"><em>"{info.info.intro}"</em></p>
+				{/if}
 				{#if info.birthday}
 					<p>
 						<strong>Birthday:</strong>
@@ -58,23 +65,50 @@
 				{#if info.sizes?.bust && info.sizes?.waist && info.sizes?.hips}
 					<p><strong>Sizes:</strong> B{info.sizes.bust} W{info.sizes.waist} H{info.sizes.hips}</p>
 				{/if}
+				{#if info.info?.shoeSize}
+					<p><strong>Shoe Size:</strong> {info.info.shoeSize}</p>
+				{/if}
+				{#if info.info?.weight}
+					<p><strong>Weight:</strong> {info.info.weight}</p>
+				{/if}
+				{#if info.info?.class}
+					<p><strong>Class:</strong> {info.info.class}</p>
+				{/if}
+				{#if info.info?.dorm}
+					<p><strong>Dorm:</strong> {info.info.dorm}</p>
+				{/if}
+				{#if info.info?.strength}
+					<p><strong>Strengths:</strong> {info.info.strength}</p>
+				{/if}
+				{#if info.info?.weakness}
+					<p><strong>Weaknesses:</strong> {info.info.weakness}</p>
+				{/if}
+				{#if info.info?.onEars}
+					<p><strong>Ears:</strong> {info.info.onEars}</p>
+				{/if}
+				{#if info.info?.onTail}
+					<p><strong>Tail:</strong> {info.info.onTail}</p>
+				{/if}
+				{#if info.info?.onFamily}
+					<p><strong>Family:</strong> {info.info.onFamily}</p>
+				{/if}
 			</div>
 			{#if info.seiyuu}
 				<hr />
 				<div>
-					<p><strong>Seiyuu: </strong> {info.seiyuu.romanizedName} ({info.seiyuu.nativeName})</p>
+					<p><strong>Voice: </strong> {info.seiyuu.romanizedName} ({info.seiyuu.nativeName})</p>
 					<p class="links">
 						{#if info.seiyuu.wikipediaUrlJP}
-							<a href={info.seiyuu.wikipediaUrlJP} target="_blank">Wiki (JP)</a>
+							<a href={info.seiyuu.wikipediaUrlJP}>Wiki (JP)</a>
 						{/if}
 						{#if info.seiyuu.wikipediaUrlEN}
-							<a href={info.seiyuu.wikipediaUrlEN} target="_blank">Wiki (EN)</a>
+							<a href={info.seiyuu.wikipediaUrlEN}>Wiki (EN)</a>
 						{/if}
 						{#if info.seiyuu.anilistUrl}
-							<a href={info.seiyuu.anilistUrl} target="_blank">Anilist</a>
+							<a href={info.seiyuu.anilistUrl}>Anilist</a>
 						{/if}
 						{#if info.seiyuu.malUrl}
-							<a href={info.seiyuu.malUrl} target="_blank">MAL</a>
+							<a href={info.seiyuu.malUrl}>MAL</a>
 						{/if}
 					</p>
 				</div>
@@ -83,25 +117,39 @@
 				<hr />
 				<div>
 					<h3>Real-life counterpart</h3>
-					<p>
-						<strong>Sex:</strong>
-						{info.counterpart.sex == 'male'
-							? 'Male'
-							: info.counterpart == 'female'
-							? 'Female'
-							: info.counterpart == 'intersex'
-							? 'Intersex'
-							: undefined}
-					</p>
+					{#if info.counterpart.sex}
+						<p>
+							<strong>Sex:</strong>
+							{info.counterpart.sex == 'male'
+								? 'Stallion'
+								: info.counterpart.sex == 'female'
+								? 'Mare'
+								: undefined}
+						</p>
+					{/if}
+					{#if info.counterpart.record}
+						<p>
+							<strong>Record:</strong>
+							{info.counterpart.record.total} Races, {info.counterpart.record.wins} Wins
+						</p>
+					{/if}
+					{#if info.counterpart.notableRaces}
+						<p><strong>Notable Races:</strong></p>
+						<ul>
+							{#each info.counterpart.notableRaces as race}
+								<li>{ordinalNumber(race.place)} - {race.name} ({race.year})</li>
+							{/each}
+						</ul>
+					{/if}
 					<p class="links">
 						{#if info.counterpart.wikipediaUrlJP}
-							<a href={info.counterpart.wikipediaUrlJP} target="_blank">Wiki (JP)</a>
+							<a href={info.counterpart.wikipediaUrlJP}>Wiki (JP)</a>
 						{/if}
 						{#if info.counterpart.wikipediaUrlEN}
-							<a href={info.counterpart.wikipediaUrlEN} target="_blank">Wiki (EN)</a>
+							<a href={info.counterpart.wikipediaUrlEN}>Wiki (EN)</a>
 						{/if}
 						{#if info.counterpart.netkeibaUrl}
-							<a href={info.counterpart.netkeibaUrl} target="_blank">Netkeiba</a>
+							<a href={info.counterpart.netkeibaUrl}>Netkeiba</a>
 						{/if}
 					</p>
 				</div>
@@ -112,7 +160,7 @@
 
 <style>
 	.info-panel {
-		margin: 10px;
+		margin: 10px 0px;
 		border: 15px solid var(--color-main);
 		border-radius: 10px;
 	}
@@ -152,7 +200,7 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		border-top: 10px solid;
+		border-top: var(--color-main) 10px solid;
 	}
 
 	.image {
@@ -179,7 +227,26 @@
 		margin-bottom: auto;
 	}
 
+	.intro {
+		padding: 20px;
+		font-size: large;
+	}
+
 	.links a {
 		padding-right: 10px;
+	}
+
+	h1,
+	h2,
+	h3 {
+		margin: 8px 0;
+	}
+
+	p {
+		margin: 5px 0;
+	}
+
+	ul {
+		margin: 0;
 	}
 </style>
