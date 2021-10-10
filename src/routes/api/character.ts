@@ -8,7 +8,10 @@ export const get: RequestHandler = async ({ query }) => {
 		if (info) {
 			return {
 				status: 200,
-				body: JSON.stringify(info)
+				body: JSON.stringify(info),
+				headers: {
+					'content-type': 'application/json'
+				}
 			};
 		}
 	}
