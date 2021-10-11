@@ -38,4 +38,12 @@
 
 <Metadata title={meta.title} description={meta.description} />
 
-<TokenRenderer tokens={lexed} />
+<div class="md">
+	<TokenRenderer tokens={lexed} />
+</div>
+
+<style>
+	.md {
+		padding: 20px 50px;
+	}
+</style>

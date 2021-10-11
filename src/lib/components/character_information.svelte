@@ -2,7 +2,7 @@
 	import { getImageMap } from '$lib/content';
 	import type { CharacterInfo, ImageTag } from '$lib/types/character';
 	import { ordinalNumber } from '$lib/util';
-	import Selector from './selector.svelte';
+	import TabBox from './tab_box.svelte';
 
 	export let charInfo: CharacterInfo;
 
@@ -24,12 +24,23 @@
 		12: 'Dec'
 	};
 
-	$: imageValues = [
+	let imageTabs: Array<{ label: string; value: ImageTag }> = [
 		{ label: 'Uniform', value: 'seifuku' },
-		{ label: 'Racing Outfit (3D)', value: 'shoubufuku' },
-		{ label: 'Original Design', value: 'proto' }
-	].filter((v) => images.has(v.value as ImageTag));
-	let imageDisplay: ImageTag;
+		{ label: 'Racing Outfit (Game)', value: 'shoubufuku' },
+		{ label: 'Racing Outfit (Original)', value: 'proto' }
+	];
+	$: imageTabs = imageTabs.filter((v) => images.has(v.value));
+
+	let descTabs = [
+		{ label: 'Character Bio', value: 'bio' },
+		{ label: 'Voice', value: 'voice' },
+		{ label: 'Real-life Counterpart', value: 'counterpart' }
+	];
+	$: descTabs = descTabs.filter((v) => {
+		if (v.value == 'bio') return info.bio;
+		if (v.value == 'voice') return info.voice;
+		if (v.value == 'counterpart') return info.counterpart;
+	});
 </script>
 
 <div
@@ -41,82 +52,109 @@
 		<h2>{info.name.native}</h2>
 	</div>
 	<div class="main">
+		<div class="intro-box">
+			{#if info.bio?.intro}
+				<p class="intro"><em>"{info.bio.intro}"</em></p>
+			{/if}
+		</div>
 		<div class="image">
-			<div style="text-align: center;">
-				<Selector items={imageValues} bind:value={imageDisplay} />
-			</div>
-			<img src={images.get(imageDisplay)} alt={info.name.translated} />
+			<TabBox tabs={imageTabs} let:value>
+				{#each imageTabs as val}
+					<div hidden={value != val.value}>
+						<img src={images.get(val.value)} alt={info.name.translated} />
+					</div>
+				{/each}
+			</TabBox>
 		</div>
 		<div class="desc">
-			<div>
-				{#if info.info?.intro}
-					<p class="intro"><em>"{info.info.intro}"</em></p>
-				{/if}
-				{#if info.birthday}
+			<TabBox tabs={descTabs} let:value style="max-width: 100%">
+				<div hidden={value != 'bio'}>
+					{#if info.bio.about}
+						<p>{info.bio.about}</p>
+						<hr />
+					{/if}
+					{#if info.bio.birthday}
+						<p>
+							<strong>Birthday:</strong>
+							{months[info.bio.birthday.month]}
+							{info.bio.birthday.day}{info.bio.birthday.year
+								? `, ${info.bio.birthday.year}`
+								: undefined}
+						</p>
+					{/if}
+					{#if info.bio.sizes?.height}
+						<p><strong>Height:</strong> {info.bio.sizes.height}cm</p>
+					{/if}
+					{#if info.bio.sizes?.bust && info.bio.sizes?.waist && info.bio.sizes?.hips}
+						<p>
+							<strong>Sizes:</strong> B{info.bio.sizes.bust} W{info.bio.sizes.waist} H{info.bio
+								.sizes.hips}
+						</p>
+					{/if}
+					{#if info.bio.sizes?.shoes}
+						<p><strong>Shoe Size:</strong> {info.bio.sizes.shoes}</p>
+					{/if}
+					{#if info.bio.weight}
+						<p><strong>Weight:</strong> {info.bio.weight}</p>
+					{/if}
+					{#if info.bio.class}
+						<p><strong>Class:</strong> {info.bio.class}</p>
+					{/if}
+					{#if info.bio.dorm}
+						<p><strong>Dorm:</strong> {info.bio.dorm}</p>
+					{/if}
+					{#if info.bio.strength}
+						<p><strong>Strengths:</strong> {info.bio.strength}</p>
+					{/if}
+					{#if info.bio.weakness}
+						<p><strong>Weaknesses:</strong> {info.bio.weakness}</p>
+					{/if}
+					{#if info.bio.secret}
+						<p><strong>Secret:</strong> {info.bio.secret}</p>
+					{/if}
+					{#if info.bio.onEars}
+						<p><strong>Ears:</strong> {info.bio.onEars}</p>
+					{/if}
+					{#if info.bio.onTail}
+						<p><strong>Tail:</strong> {info.bio.onTail}</p>
+					{/if}
+					{#if info.bio.onFamily}
+						<p><strong>Family:</strong> {info.bio.onFamily}</p>
+					{/if}
+				</div>
+				<div hidden={value != 'voice'}>
+					{#if info.voice.voiceSample}
+						<div class="voice-box">
+							<audio controls src={info.voice.voiceSample}>
+								<track kind="captions" />
+							</audio>
+						</div>
+					{/if}
 					<p>
-						<strong>Birthday:</strong>
-						{months[info.birthday.month]}
-						{info.birthday.day}{info.birthday.year ? `, ${info.birthday.year}` : undefined}
+						<strong>Voiced by: </strong>
+						{info.voice.romanizedName} ({info.voice.nativeName})
 					</p>
-				{/if}
-				{#if info.sizes?.height}
-					<p><strong>Height:</strong> {info.sizes.height}cm</p>
-				{/if}
-				{#if info.sizes?.bust && info.sizes?.waist && info.sizes?.hips}
-					<p><strong>Sizes:</strong> B{info.sizes.bust} W{info.sizes.waist} H{info.sizes.hips}</p>
-				{/if}
-				{#if info.info?.shoeSize}
-					<p><strong>Shoe Size:</strong> {info.info.shoeSize}</p>
-				{/if}
-				{#if info.info?.weight}
-					<p><strong>Weight:</strong> {info.info.weight}</p>
-				{/if}
-				{#if info.info?.class}
-					<p><strong>Class:</strong> {info.info.class}</p>
-				{/if}
-				{#if info.info?.dorm}
-					<p><strong>Dorm:</strong> {info.info.dorm}</p>
-				{/if}
-				{#if info.info?.strength}
-					<p><strong>Strengths:</strong> {info.info.strength}</p>
-				{/if}
-				{#if info.info?.weakness}
-					<p><strong>Weaknesses:</strong> {info.info.weakness}</p>
-				{/if}
-				{#if info.info?.onEars}
-					<p><strong>Ears:</strong> {info.info.onEars}</p>
-				{/if}
-				{#if info.info?.onTail}
-					<p><strong>Tail:</strong> {info.info.onTail}</p>
-				{/if}
-				{#if info.info?.onFamily}
-					<p><strong>Family:</strong> {info.info.onFamily}</p>
-				{/if}
-			</div>
-			{#if info.seiyuu}
-				<hr />
-				<div>
-					<p><strong>Voice: </strong> {info.seiyuu.romanizedName} ({info.seiyuu.nativeName})</p>
 					<p class="links">
-						{#if info.seiyuu.wikipediaUrlJP}
-							<a href={info.seiyuu.wikipediaUrlJP}>Wiki (JP)</a>
+						{#if info.voice.wikipediaUrlJP}
+							<a href={info.voice.wikipediaUrlJP}>Wiki (JP)</a>
 						{/if}
-						{#if info.seiyuu.wikipediaUrlEN}
-							<a href={info.seiyuu.wikipediaUrlEN}>Wiki (EN)</a>
+						{#if info.voice.wikipediaUrlEN}
+							<a href={info.voice.wikipediaUrlEN}>Wiki (EN)</a>
 						{/if}
-						{#if info.seiyuu.anilistUrl}
-							<a href={info.seiyuu.anilistUrl}>Anilist</a>
+						{#if info.voice.anilistUrl}
+							<a href={info.voice.anilistUrl}>Anilist</a>
 						{/if}
-						{#if info.seiyuu.malUrl}
-							<a href={info.seiyuu.malUrl}>MAL</a>
+						{#if info.voice.malUrl}
+							<a href={info.voice.malUrl}>MAL</a>
 						{/if}
 					</p>
 				</div>
-			{/if}
-			{#if info.counterpart}
-				<hr />
-				<div>
-					<h3>Real-life counterpart</h3>
+				<div hidden={value != 'counterpart'}>
+					{#if images.has('counterpart')}
+						<div class="img-box">
+							<img src={images.get('counterpart')} alt={info.name.translated} />
+						</div>
+					{/if}
 					{#if info.counterpart.sex}
 						<p>
 							<strong>Sex:</strong>
@@ -153,7 +191,7 @@
 						{/if}
 					</p>
 				</div>
-			{/if}
+			</TabBox>
 		</div>
 	</div>
 </div>
@@ -204,6 +242,7 @@
 	}
 
 	.image {
+		padding: 20px;
 		flex-grow: 1;
 		border-radius: 10px;
 	}
@@ -223,13 +262,37 @@
 		flex-basis: 0;
 		flex-grow: 1;
 		padding: 20px;
-		margin-top: auto;
-		margin-bottom: auto;
+		margin-bottom: 0;
+	}
+
+	.intro-box {
+		width: 100%;
 	}
 
 	.intro {
+		max-width: 500px;
+		margin: 0 auto;
 		padding: 20px;
 		font-size: large;
+	}
+
+	.img-box img {
+		border-radius: 8px;
+		max-width: 100%;
+	}
+
+	.voice-box {
+		padding: 20px 0px;
+		text-align: center;
+	}
+
+	.voice-box audio {
+		max-width: 100%;
+		border-radius: 15px;
+	}
+
+	.links {
+		margin-top: 20px;
 	}
 
 	.links a {
@@ -237,8 +300,7 @@
 	}
 
 	h1,
-	h2,
-	h3 {
+	h2 {
 		margin: 8px 0;
 	}
 

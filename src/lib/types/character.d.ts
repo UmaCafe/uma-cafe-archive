@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type ImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto" | "icon";
+export type ImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto" | "icon" | "counterpart";
 
 export interface CharacterInfo {
   /**
@@ -17,32 +17,48 @@ export interface CharacterInfo {
       translated: string;
     };
     /**
-     * The type of character (e.g. Uma or NPC)
-     */
-    type: "uma" | "npc";
-    /**
      * The internal game ID of the character
      */
     gameId?: number;
     /**
-     * Misc. info from the game
+     * Character bio information
      */
-    info?: {
+    bio?: {
       intro?: string;
-      dorm?: string;
-      class?: string;
+      about?: string;
+      /**
+       * The character's birthday
+       */
+      birthday?: {
+        year?: number;
+        month: number;
+        day: number;
+      };
+      /**
+       * The character's physical sizes (measured in cm)
+       */
+      sizes?: {
+        height?: number;
+        bust?: number;
+        waist?: number;
+        hips?: number;
+        shoes?: string;
+      };
       weight?: string;
+      class?: string;
+      dorm?: string;
       strength?: string;
       weakness?: string;
-      shoeSize?: string;
+      secret?: string;
       onEars?: string;
       onTail?: string;
       onFamily?: string;
     };
     /**
-     * Information about the character's seiyuu
+     * Information about the character's seiyuu/voice
      */
-    seiyuu?: {
+    voice?: {
+      voiceSample?: string;
       nativeName: string;
       romanizedName: string;
       wikipediaUrlJP?: string;
@@ -74,23 +90,6 @@ export interface CharacterInfo {
     colors?: {
       main: string;
       sub: string;
-    };
-    /**
-     * The character's birthday
-     */
-    birthday?: {
-      year?: number;
-      month: number;
-      day: number;
-    };
-    /**
-     * The character's physical sizes (measured in cm)
-     */
-    sizes?: {
-      height?: number;
-      bust?: number;
-      waist?: number;
-      hips?: number;
     };
   };
   /**
