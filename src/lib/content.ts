@@ -41,7 +41,7 @@ export async function getPageMarkdown(page: string): Promise<string | null> {
 
 /**
  * @param charId The reference ID of the character
- * @returns Character info object for the character
+ * @returns Character info object for the character, or null if it doesn't exist
  */
 export async function getCharacterInfo(charId: string): Promise<CharacterInfo | null> {
 	if (!browser) {
@@ -60,6 +60,37 @@ export async function getCharacterInfo(charId: string): Promise<CharacterInfo | 
 		}
 	}
 	return null;
+}
+
+/**
+ * @returns Character info objects for all characters keyed to their ID
+ */
+export async function getAllCharacters(): Promise<Map<string, CharacterInfo>> {
+	if (!browser) {
+		const { readFileSync, readdirSync } = await import('fs');
+		const dirPath = `content/data/characters`;
+		const files = readdirSync(dirPath);
+		const infoMap = new Map();
+		for (const file of files) {
+			console.log(file);
+			if (file.endsWith('.json')) {
+				const charId = file.substr(0, file.length - 5);
+
+				const json = readFileSync(`${dirPath}/${file}`, 'utf-8');
+				const data = JSON.parse(json);
+				delete data['$schema'];
+				infoMap.set(charId, data as CharacterInfo);
+			}
+		}
+		return infoMap;
+	} else {
+		const resp = await fetch(`/api/character?all=true`);
+		if (resp.status == 200) {
+			const data = await resp.json();
+			return new Map(data);
+		}
+	}
+	return new Map();
 }
 
 /**

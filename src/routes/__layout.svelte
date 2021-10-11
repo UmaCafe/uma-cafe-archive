@@ -185,7 +185,8 @@
 	}
 
 	:global(body) {
-		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		font-family: 'メイリオ', Meiryo, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka,
+			'ＭＳ Ｐゴシック', 'MS P Gothic', sans-serif;
 		font-weight: 400;
 		line-height: 1.5;
 		font-size: 1rem;
