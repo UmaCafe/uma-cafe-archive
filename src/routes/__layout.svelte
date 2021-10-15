@@ -185,8 +185,8 @@
 	}
 
 	:global(body) {
-		font-family: 'メイリオ', Meiryo, 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka,
-			'ＭＳ Ｐゴシック', 'MS P Gothic', sans-serif;
+		font-family: Roboto, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+			sans-serif;
 		font-weight: 400;
 		line-height: 1.5;
 		font-size: 1rem;
@@ -213,6 +213,10 @@
 		background-repeat: repeat;
 		padding: 0;
 		margin: 0;
+	}
+
+	:global(body.dark) .background {
+		background-image: url(/images/background/bg_dark.jpg);
 	}
 
 	:global(#tsparticles) {
