@@ -5,10 +5,11 @@
 	};
 
 	export let tabs: Array<Tab>;
+	export let color: string = '#282';
 	let value: string = tabs?.[0]?.value ?? '';
 </script>
 
-<div class="tab-box" {...$$restProps}>
+<div class="tab-box" style="--tab-color: {color};" {...$$restProps}>
 	<ul class="tab-list">
 		{#each tabs as tab}
 			<li class:active={tab.value === value}>
@@ -20,7 +21,7 @@
 			</li>
 		{/each}
 	</ul>
-	<div class="tab-content" {...$$restProps}>
+	<div class="tab-content">
 		<slot {value} />
 	</div>
 </div>
@@ -67,7 +68,7 @@
 
 	.tab-list li.active button {
 		color: #fff;
-		background-color: #282;
+		background-color: var(--tab-color);
 	}
 
 	.tab-content {

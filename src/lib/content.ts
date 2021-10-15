@@ -72,8 +72,7 @@ export async function getAllCharacters(): Promise<Map<string, CharacterInfo>> {
 		const files = readdirSync(dirPath);
 		const infoMap = new Map();
 		for (const file of files) {
-			console.log(file);
-			if (file.endsWith('.json')) {
+			if (file.endsWith('.json') && !file.endsWith('.todo.json')) {
 				const charId = file.substr(0, file.length - 5);
 
 				const json = readFileSync(`${dirPath}/${file}`, 'utf-8');

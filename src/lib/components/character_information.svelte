@@ -67,11 +67,11 @@
 			</TabBox>
 		</div>
 		<div class="desc">
-			<TabBox tabs={descTabs} let:value style="max-width: 100%">
+			<TabBox tabs={descTabs} let:value>
 				<div hidden={value != 'bio'}>
 					{#if info.bio.about}
-						<p>{info.bio.about}</p>
-						<hr />
+						<p class="about">{info.bio.about}</p>
+						<hr class="about-hr" />
 					{/if}
 					{#if info.bio.birthday}
 						<p>
@@ -274,6 +274,10 @@
 		margin: 0 auto;
 		padding: 20px;
 		font-size: large;
+	}
+
+	.about-hr {
+		margin: 25px 0px;
 	}
 
 	.img-box img {
