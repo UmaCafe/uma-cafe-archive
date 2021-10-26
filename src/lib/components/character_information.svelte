@@ -132,7 +132,8 @@
 					{/if}
 					<p>
 						<strong>Voiced by: </strong>
-						{info.voice.romanizedName} ({info.voice.nativeName})
+						{info.voice.romanizedName}
+						{#if info.voice.nativeName != info.voice.romanizedName}({info.voice.nativeName}){/if}
 					</p>
 					<p class="links">
 						{#if info.voice.wikipediaUrlJP}
@@ -171,7 +172,7 @@
 							{info.counterpart.record.total} Races, {info.counterpart.record.wins} Wins
 						</p>
 					{/if}
-					{#if info.counterpart.notableRaces}
+					{#if info.counterpart.notableRaces?.length > 0}
 						<p><strong>Notable Races:</strong></p>
 						<ul>
 							{#each info.counterpart.notableRaces as race}
