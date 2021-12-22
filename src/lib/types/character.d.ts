@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type ImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto" | "icon" | "counterpart";
+export type CharacterImageTag = "thumb" | "shoubufuku" | "seifuku" | "proto" | "icon" | "counterpart";
 
 export interface CharacterInfo {
   /**
@@ -96,7 +96,7 @@ export interface CharacterInfo {
    * List of images of the character
    */
   images: {
-    tag: ImageTag;
+    tag: CharacterImageTag;
     /**
      * File path to the image relative to the /public/images folder
      */

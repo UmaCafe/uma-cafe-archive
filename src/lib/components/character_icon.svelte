@@ -1,23 +1,29 @@
 <script lang="ts">
-	import { getImageMap } from '$lib/content';
+	import { getCharacterInfo, getImageMap } from '$lib/content';
 	import type { CharacterInfo } from '$lib/types/character';
 
-	export let charInfo: CharacterInfo;
+	export let charId: string | null = null;
+	export let charInfo: CharacterInfo | null = null;
+	if (charId) {
+		getCharacterInfo(charId).then((val) => (charInfo = val));
+	}
 	const images = getImageMap(charInfo);
 </script>
 
-<div
-	class="icon-box"
-	style="--color-main: #{charInfo.info.colors?.main ?? 'ddf'}; --color-sub: #{charInfo.info.colors
-		?.sub ?? 'ccd'};"
->
-	<div class="img-box">
-		<img src={images.get('icon')} alt="" width="140" />
+{#if charInfo}
+	<div
+		class="icon-box"
+		style="--color-main: #{charInfo.info.colors?.main ?? 'ddf'}; --color-sub: #{charInfo.info.colors
+			?.sub ?? 'ccd'};"
+	>
+		<div class="img-box">
+			<img src={images.get('icon')} alt="" width="140" />
+		</div>
+		<div class="capt-box">
+			<span>{charInfo.info.name.translated}</span>
+		</div>
 	</div>
-	<div class="capt-box">
-		<span>{charInfo.info.name.translated}</span>
-	</div>
-</div>
+{/if}
 
 <style>
 	.icon-box {

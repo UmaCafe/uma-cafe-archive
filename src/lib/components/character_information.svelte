@@ -1,6 +1,6 @@
 <script type="ts">
 	import { getImageMap } from '$lib/content';
-	import type { CharacterInfo, ImageTag } from '$lib/types/character';
+	import type { CharacterInfo, CharacterImageTag } from '$lib/types/character';
 	import { ordinalNumber } from '$lib/util';
 	import TabBox from './tab_box.svelte';
 
@@ -24,7 +24,7 @@
 		12: 'Dec'
 	};
 
-	let imageTabs: Array<{ label: string; value: ImageTag }> = [
+	let imageTabs: Array<{ label: string; value: CharacterImageTag }> = [
 		{ label: 'Uniform', value: 'seifuku' },
 		{ label: 'Racing Outfit (Game)', value: 'shoubufuku' },
 		{ label: 'Racing Outfit (Original)', value: 'proto' }
