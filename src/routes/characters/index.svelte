@@ -2,7 +2,7 @@
 	import CharacterIcon from '$lib/components/character_icon.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import { getAllCharacters } from '$lib/content';
-	import type { CharacterInfo } from '$lib/types/character';
+	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 
 	export const load: Load = async () => {
@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	export let chars: Map<string, CharacterInfo>;
+	export let chars: Map<string, CharacterObject>;
 </script>
 
 <Metadata title="Character List" description="List of Uma Musume characters." />

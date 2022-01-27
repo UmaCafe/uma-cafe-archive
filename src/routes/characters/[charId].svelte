@@ -1,17 +1,17 @@
 <script lang="ts" context="module">
 	import CharacterInformation from '$lib/components/character_information.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getCharacterInfo, getImageUrl } from '$lib/content';
-	import type { CharacterInfo } from '$lib/types/character';
+	import { getCharacterInfo } from '$lib/content';
+	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 
 	export const load: Load = async ({ page }) => {
 		let charId = page.params.charId;
-		const charInfo = await getCharacterInfo(charId);
-		if (charInfo) {
+		const charObj = await getCharacterInfo(charId);
+		if (charObj) {
 			return {
 				props: {
-					charInfo
+					charObj
 				}
 			};
 		}
@@ -19,18 +19,13 @@
 </script>
 
 <script lang="ts">
-	export let charInfo: CharacterInfo;
-	const icon = charInfo.images.find((i) => i.tag == 'icon');
-	let description = `Information about ${charInfo.info.name.translated} from Uma Musume`;
-	if (charInfo.info.bio?.about) {
-		description = charInfo.info.bio.about;
+	export let charObj: CharacterObject;
+	let description = `Information about ${charObj.info.name.translated} from Uma Musume`;
+	if (charObj.info.bio?.about) {
+		description = charObj.info.bio.about;
 	}
 </script>
 
-<Metadata
-	title={charInfo.info.name.translated}
-	{description}
-	image={icon ? getImageUrl(icon.file) : undefined}
-/>
+<Metadata title={charObj.info.name.translated} {description} image={charObj.images.icon} />
 
-<CharacterInformation {charInfo} />
+<CharacterInformation charInfo={charObj} />

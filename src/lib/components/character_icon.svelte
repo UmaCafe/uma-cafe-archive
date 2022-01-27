@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { getCharacterInfo, getImageMap } from '$lib/content';
-	import type { CharacterInfo } from '$lib/types/character';
+	import { getCharacterInfo, getImageUrl } from '$lib/content';
+	import type { CharacterObject } from '$lib/types/character';
 
 	export let charId: string | null = null;
-	export let charInfo: CharacterInfo | null = null;
+	export let charInfo: CharacterObject | null = null;
 	if (charId) {
 		getCharacterInfo(charId).then((val) => (charInfo = val));
 	}
-	const images = getImageMap(charInfo);
 </script>
 
 {#if charInfo}
@@ -17,7 +16,7 @@
 			?.sub ?? 'ccd'};"
 	>
 		<div class="img-box">
-			<img src={images.get('icon')} alt="" width="140" />
+			<img src={getImageUrl(charInfo.images.icon)} alt="" width="140" />
 		</div>
 		<div class="capt-box">
 			<span>{charInfo.info.name.translated}</span>

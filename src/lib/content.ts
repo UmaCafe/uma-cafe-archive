@@ -1,10 +1,11 @@
 import { browser } from '$app/env';
 import { get, writable } from 'svelte/store';
-import type { CharacterImageTag, CharacterInfo } from './types/character';
-import type { RaceImageTag, RaceInfo } from './types/race';
+import { characterDb, pageDb, raceDb } from './db/firestore';
+import type { CharacterObject } from './types/character';
+import type { RaceObject } from './types/race';
 
-export const CHAR_DATA = writable(new Map<string, CharacterInfo>());
-export const RACE_DATA = writable(new Map<string, RaceInfo>());
+export const CHAR_DATA = writable(new Map<string, CharacterObject>());
+export const RACE_DATA = writable(new Map<string, RaceObject>());
 
 /**
  * Transform an image name relative to the images folder into the absolute path used by an <img> tag
@@ -21,19 +22,14 @@ export function getImageUrl(image: string): string {
  * @returns Markdown content as a string, or null if page not found
  */
 export async function getPageMarkdown(page: string): Promise<string | null> {
-	if (page.endsWith('README')) return null;
 	if (!browser) {
-		const { readFileSync, existsSync } = await import('fs');
-		const dirs = page.split('/');
-		const filesToCheck = [`${page}/index.md`];
-		if (dirs[dirs.length - 1] != 'index') {
-			filesToCheck.push(`${page}.md`);
-		}
-		for (const toCheck of filesToCheck) {
-			const filePath = `content/pages/${toCheck}`;
-			if (existsSync(filePath)) {
-				return readFileSync(filePath, 'utf-8');
-			}
+		const pages = await pageDb();
+		if (page == 'index') return null;
+		if (page.length == 0) page = 'index';
+		const pageData = await pages.doc(page).get();
+		if (pageData.exists) {
+			const pageObj = pageData.data();
+			return pageObj.md.replace(/\\n/g, '\n');
 		}
 	} else {
 		const resp = await fetch(`/api/content?page=${page}`);
@@ -48,15 +44,12 @@ export async function getPageMarkdown(page: string): Promise<string | null> {
  * @param charId The reference ID of the character
  * @returns Character info object for the character, or null if it doesn't exist
  */
-export async function getCharacterInfo(charId: string): Promise<CharacterInfo | null> {
+export async function getCharacterInfo(charId: string): Promise<CharacterObject | null> {
 	if (!browser) {
-		const { readFileSync, existsSync } = await import('fs');
-		const filePath = `content/data/characters/${charId}.json`;
-		if (existsSync(filePath)) {
-			const json = readFileSync(filePath, 'utf-8');
-			const data = JSON.parse(json);
-			delete data['$schema'];
-			return data as CharacterInfo;
+		const chars = await characterDb();
+		const charData = await chars.doc(charId).get();
+		if (charData.exists) {
+			return charData.data();
 		}
 	} else {
 		const charData = get(CHAR_DATA);
@@ -65,7 +58,7 @@ export async function getCharacterInfo(charId: string): Promise<CharacterInfo | 
 		} else {
 			const resp = await fetch(`/api/character?id=${charId}`);
 			if (resp.status == 200) {
-				const data = (await resp.json()) as CharacterInfo;
+				const data = (await resp.json()) as CharacterObject;
 				CHAR_DATA.update((val) => {
 					val.set(charId, data);
 					return val;
@@ -80,28 +73,20 @@ export async function getCharacterInfo(charId: string): Promise<CharacterInfo | 
 /**
  * @returns Character info objects for all characters keyed to their ID
  */
-export async function getAllCharacters(): Promise<Map<string, CharacterInfo>> {
+export async function getAllCharacters(): Promise<Map<string, CharacterObject>> {
 	if (!browser) {
-		const { readFileSync, readdirSync } = await import('fs');
-		const dirPath = `content/data/characters`;
-		const files = readdirSync(dirPath);
-		const infoMap = new Map<string, CharacterInfo>();
-		for (const file of files) {
-			if (file.endsWith('.json') && !file.endsWith('.todo.json')) {
-				const charId = file.substring(0, file.length - 5);
-
-				const json = readFileSync(`${dirPath}/${file}`, 'utf-8');
-				const data = JSON.parse(json);
-				delete data['$schema'];
-				infoMap.set(charId, data as CharacterInfo);
-			}
-		}
-		return infoMap;
+		const chars = await characterDb();
+		const docList = await chars.listDocuments();
+		const dataList = docList.map(async (docRef) => {
+			const data = await docRef.get();
+			return [data.id, data.data()] as [string, CharacterObject];
+		});
+		return new Map(await Promise.all(dataList));
 	} else {
 		const resp = await fetch(`/api/character?all=true`);
 		if (resp.status == 200) {
 			const data = await resp.json();
-			const map = new Map(data) as Map<string, CharacterInfo>;
+			const map = new Map(data) as Map<string, CharacterObject>;
 			CHAR_DATA.set(map);
 			return map;
 		}
@@ -109,59 +94,23 @@ export async function getAllCharacters(): Promise<Map<string, CharacterInfo>> {
 	return new Map();
 }
 
-export type ImageTag<T> = T extends CharacterInfo
-	? CharacterImageTag
-	: T extends RaceInfo
-	? RaceImageTag
-	: never;
-
-/**
- * Transforms the images from an info object into a map with URLs for easier access
- * @param charInfo Character or Race info object
- * @returns Map from image tag to URL
- */
-export function getImageMap<T extends RaceInfo | CharacterInfo>(
-	infoObj: T
-): Map<ImageTag<T>, string> {
-	const map = new Map<ImageTag<T>, string>();
-	infoObj.images.forEach((img: { tag: unknown; file: string }) => {
-		map.set(img.tag as ImageTag<T>, getImageUrl(img.file));
-	});
-	return map;
-}
-
 /**
  * @returns Race info objects for all races keyed to their ID
  */
-export async function getAllRaces(): Promise<Map<string, RaceInfo>> {
+export async function getAllRaces(): Promise<Map<string, RaceObject>> {
 	if (!browser) {
-		const { readFileSync, readdirSync } = await import('fs');
-		const dirPath = `content/data/races`;
-		const subdirs = readdirSync(dirPath);
-		const files: [string, string][] = [];
-		for (const subdir of subdirs) {
-			const subfiles = readdirSync(`${dirPath}/${subdir}`);
-			subfiles.forEach((subfile) => {
-				files.push([subdir, subfile]);
-			});
-		}
-		const infoMap = new Map<string, RaceInfo>();
-		for (const [subdir, file] of files) {
-			if (file.endsWith('.json') && !file.endsWith('.todo.json')) {
-				const raceId = `${subdir}/${file.substring(0, file.length - 5)}`;
-
-				const json = readFileSync(`${dirPath}/${subdir}/${file}`, 'utf-8');
-				const data = JSON.parse(json);
-				delete data['$schema'];
-				infoMap.set(raceId, data as RaceInfo);
-			}
-		}
-		return infoMap;
+		const races = await raceDb();
+		const docList = await races.listDocuments();
+		const dataList = docList.map(async (docRef) => {
+			const data = await docRef.get();
+			return [data.id, data.data()] as [string, RaceObject];
+		});
+		return new Map(await Promise.all(dataList));
 	} else {
 		const resp = await fetch(`/api/race?all=true`);
 		if (resp.status == 200) {
 			const data = await resp.json();
-			const map = new Map(data) as Map<string, RaceInfo>;
+			const map = new Map(data) as Map<string, RaceObject>;
 			RACE_DATA.set(map);
 			return map;
 		}
@@ -173,15 +122,13 @@ export async function getAllRaces(): Promise<Map<string, RaceInfo>> {
  * @param raceId The reference ID of the race
  * @returns Race info object for the race, or null if it doesn't exist
  */
-export async function getRaceInfo(raceId: string): Promise<RaceInfo | null> {
+export async function getRaceInfo(raceId: string): Promise<RaceObject | null> {
 	if (!browser) {
-		const { readFileSync, existsSync } = await import('fs');
-		const filePath = `content/data/races/${raceId}.json`;
-		if (existsSync(filePath)) {
-			const json = readFileSync(filePath, 'utf-8');
-			const data = JSON.parse(json);
-			delete data['$schema'];
-			return data as RaceInfo;
+		const races = await raceDb();
+		const raceDoc = await races.doc(raceId).get();
+		if (raceDoc.exists) {
+			const raceObj = raceDoc.data();
+			return raceObj;
 		}
 	} else {
 		const raceData = get(RACE_DATA);
@@ -190,7 +137,7 @@ export async function getRaceInfo(raceId: string): Promise<RaceInfo | null> {
 		} else {
 			const resp = await fetch(`/api/race?id=${raceId}`);
 			if (resp.status == 200) {
-				const data = (await resp.json()) as RaceInfo;
+				const data = (await resp.json()) as RaceObject;
 				RACE_DATA.update((val) => {
 					val.set(raceId, data);
 					return val;

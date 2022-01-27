@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { getImageMap, getRaceInfo } from '$lib/content';
-	import type { RaceInfo } from '$lib/types/race';
+	import { getRaceInfo } from '$lib/content';
+	import type { RaceObject } from '$lib/types/race';
 
 	export let raceId: string | null = null;
-	export let raceInfo: RaceInfo | null = null;
+	export let raceInfo: RaceObject | null = null;
 	if (raceId) {
 		getRaceInfo(raceId).then((val) => (raceInfo = val));
 	}
-	const images = getImageMap(raceInfo);
 
 	function trackString() {
 		const trackInfo = raceInfo.info.trackInfo;
@@ -25,7 +24,7 @@
 
 {#if raceInfo}
 	<div class="race">
-		<img class="logo" src={images.get('thumb')} alt="" />
+		<img class="logo" src={raceInfo.images.thumb} alt="" />
 		<div class="info">
 			<h2>{raceInfo.info.name.translated}</h2>
 			{#if raceInfo.info.trackInfo}
