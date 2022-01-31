@@ -1,32 +1,62 @@
 <script type="ts">
+	import { session } from '$app/stores';
+	import type { EditorObject } from '$lib/types/editors';
 	import { onMount } from 'svelte';
-
-	import navbar from '../../content/navbar.json';
 
 	let ParticlesComponent;
 	onMount(async () => {
 		const mod = await import('svelte-particles');
 		ParticlesComponent = mod.default;
 	});
+
+	let links = [
+		{
+			title: 'Characters',
+			href: '/characters'
+		},
+		{
+			title: 'Races',
+			href: '/races'
+		}
+	];
+
+	let editor: EditorObject = $session.editor;
 </script>
 
 <nav>
-	<div class="container">
+	<header class="container">
 		<div class="brand"><a href="/">Uma Cafe</a></div>
 		<div class="links">
-			{#each navbar.links as link}
+			{#each links as link}
 				<div class="link">
 					<a href={link.href}>{link.title}</a>
 				</div>
 			{/each}
 		</div>
-	</div>
+	</header>
 </nav>
 
 <div class="container content-box">
 	<div class="content">
 		<slot />
 	</div>
+	<footer>
+		<hr />
+		<div class="footer-content">
+			<div class="left">
+				<a href="mailto:snep@uma.cafe">Contact</a>
+			</div>
+			<div class="right">
+				{#if editor}
+					<span>Editor: {editor.name}</span>
+					<a href="/editor/protected/home">Editor Home</a>
+					<a href="/api/auth">Logout</a>
+				{:else}
+					<a href="/editor/login">Editor Login</a>
+				{/if}
+			</div>
+		</div>
+	</footer>
 </div>
 
 <div class="background">
@@ -125,6 +155,7 @@
 	}
 
 	.content-box {
+		position: relative;
 		background-color: #f5f5ff;
 		border-top-left-radius: 20px;
 		border-top-right-radius: 20px;
@@ -139,15 +170,43 @@
 	.content {
 		display: inline-block;
 		width: 100%;
-		padding-bottom: 2rem;
+		padding-bottom: 4rem;
 	}
 
 	nav .container {
 		display: flex;
+		flex-direction: row;
 		margin-top: 2rem;
 		margin-bottom: 1rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
+	}
+
+	footer {
+		position: absolute;
+		bottom: 10px;
+		left: 0;
+		width: 100%;
+		height: 3rem;
+	}
+
+	footer hr {
+		width: 95%;
+	}
+
+	.footer-content {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.footer-content .left {
+		margin-left: 2rem;
+	}
+
+	.footer-content .right {
+		align-self: flex-end;
+		margin-left: auto;
+		margin-right: 2rem;
 	}
 
 	.brand a {

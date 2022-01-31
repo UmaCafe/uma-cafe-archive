@@ -1,9 +1,10 @@
+import type { EditorObject } from '$lib/types/editors';
 import type { CollectionReference } from '@google-cloud/firestore';
 import { Firestore } from '@google-cloud/firestore';
 import type { CharacterObject } from '../types/character';
 import type { RaceObject } from '../types/race';
 
-async function getCollection<T>(collectionId: string): Promise<CollectionReference<T>> {
+export async function getCollection<T>(collectionId: string): Promise<CollectionReference<T>> {
 	const firestore = new Firestore();
 	return firestore.collection(collectionId).withConverter<T>({
 		toFirestore: (data: T) => data,
@@ -20,4 +21,7 @@ export async function raceDb(): Promise<CollectionReference<RaceObject>> {
 export type Page = { md: string };
 export async function pageDb(): Promise<CollectionReference<Page>> {
 	return getCollection<Page>('pages');
+}
+export async function editorsDb(): Promise<CollectionReference<EditorObject>> {
+	return getCollection<EditorObject>('editors');
 }

@@ -26,7 +26,8 @@ export async function getPageMarkdown(page: string): Promise<string | null> {
 		const pages = await pageDb();
 		if (page == 'index') return null;
 		if (page.length == 0) page = 'index';
-		const pageData = await pages.doc(page).get();
+		const docId = page.replace(/\./g, '').replace(/\//g, '.');
+		const pageData = await pages.doc(docId).get();
 		if (pageData.exists) {
 			const pageObj = pageData.data();
 			return pageObj.md.replace(/\\n/g, '\n');

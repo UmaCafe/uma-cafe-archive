@@ -9,14 +9,18 @@
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
-		"update": "cd content && git checkout master && git pull"
+		"exportData": "npx -p node-firestore-import-export firestore-export -a gcloud_credentials.json -b database.json",
+		"importData": "npx -p node-firestore-import-export firestore-import -a gcloud_credentials.json -b database.json"
 	},
 	"devDependencies": {
+		"@google-cloud/firestore": "^5.0.2",
 		"@sveltejs/adapter-node": "^1.0.0-next.51",
 		"@sveltejs/kit": "next",
+		"@types/cookie": "^0.4.1",
 		"@types/marked": "^3.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
+		"cookie": "^0.4.1",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",
@@ -30,7 +34,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@google-cloud/firestore": "^5.0.2",
 		"front-matter": "^4.0.2",
 		"marked": "^3.0.4",
 		"svelte-particles": "^1.18.2"
