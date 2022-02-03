@@ -6,7 +6,7 @@
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 	export const load: Load = async () => {
-		const chars = await getAllCharacters();
+		const chars = await getAllCharacters(true);
 		return {
 			props: {
 				chars
@@ -28,10 +28,15 @@
 
 <div class="creation">
 	<h2>Characters</h2>
-	<select bind:value={selChar}>
-		{#each [...chars] as [charId, charInfo]}
-			<option value={charId}>{charInfo.info.name.translated}</option>
-		{/each}
-	</select>
-	<button on:click={() => goto(`./characters/${selChar}`)}>Edit</button>
+	<div>
+		<select bind:value={selChar}>
+			{#each [...chars] as [charId, charInfo]}
+				<option value={charId}>{charInfo.info.name.translated}</option>
+			{/each}
+		</select>
+		<button on:click={() => goto(`./characters/${selChar}`)}>Edit</button>
+	</div>
+	<div>
+		<button on:click={() => goto(`./characters/new`)}>Add Character</button>
+	</div>
 </div>

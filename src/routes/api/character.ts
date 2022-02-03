@@ -15,7 +15,7 @@ export const get: RequestHandler = async ({ query }) => {
 			};
 		}
 	} else if (query.has('all') && query.get('all')) {
-		const infoObjs = await getAllCharacters();
+		const infoObjs = await getAllCharacters(query.has('invis') && query.get('invis') == '1');
 		return {
 			status: 200,
 			body: JSON.stringify([...infoObjs]),

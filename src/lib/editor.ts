@@ -43,3 +43,16 @@ export async function makeEdit(
 		});
 	}
 }
+
+export async function createBasic(
+	key: string,
+	collection: string,
+	doc: string,
+	data: unknown
+): Promise<void> {
+	const editor = await getEditorFromKey(key);
+	if (editor) {
+		const docRef = (await getCollection(collection)).doc(doc);
+		await docRef.create(data);
+	}
+}

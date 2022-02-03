@@ -1,4 +1,5 @@
 import { browser } from '$app/env';
+import type { QueryDocumentSnapshot } from '@google-cloud/firestore';
 import { get, writable } from 'svelte/store';
 import { characterDb, pageDb, raceDb } from './db/firestore';
 import type { CharacterObject } from './types/character';
@@ -74,17 +75,23 @@ export async function getCharacterInfo(charId: string): Promise<CharacterObject 
 /**
  * @returns Character info objects for all characters keyed to their ID
  */
-export async function getAllCharacters(): Promise<Map<string, CharacterObject>> {
+export async function getAllCharacters(
+	allowInvisible = false
+): Promise<Map<string, CharacterObject>> {
 	if (!browser) {
 		const chars = await characterDb();
-		const docList = await chars.listDocuments();
-		const dataList = docList.map(async (docRef) => {
-			const data = await docRef.get();
-			return [data.id, data.data()] as [string, CharacterObject];
+		let docList: QueryDocumentSnapshot<CharacterObject>[];
+		if (allowInvisible) {
+			docList = (await chars.get()).docs;
+		} else {
+			docList = (await chars.where('visible', '==', true).get()).docs;
+		}
+		const dataList = docList.map(async (doc) => {
+			return [doc.id, doc.data()] as [string, CharacterObject];
 		});
 		return new Map(await Promise.all(dataList));
 	} else {
-		const resp = await fetch(`/api/character?all=true`);
+		const resp = await fetch(`/api/character?all=true` + (allowInvisible ? `&invis=1` : ``));
 		if (resp.status == 200) {
 			const data = await resp.json();
 			const map = new Map(data) as Map<string, CharacterObject>;

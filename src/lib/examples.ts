@@ -66,5 +66,6 @@ export const CHARACTER_EXAMPLE: CharacterObject = {
 		proto: 'characters/[folder]/proto.png',
 		seifuku: 'characters/[folder]/seifuku.png',
 		shoubufuku: 'characters/[folder]/shoubufuku.png'
-	}
+	},
+	visible: false
 };

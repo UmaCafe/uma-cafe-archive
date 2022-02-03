@@ -26,8 +26,8 @@
 	];
 	$: descTabs = descTabs.filter((v) => {
 		if (v.value == 'bio') return info.bio;
-		if (v.value == 'voice') return info.voice;
-		if (v.value == 'counterpart') return info.counterpart;
+		if (v.value == 'voice') return info.voice?.nativeName && info.voice?.romanizedName;
+		if (v.value == 'counterpart') return info.counterpart.sex;
 	});
 </script>
 
@@ -58,7 +58,7 @@
 						<p class="about">{info.bio.about}</p>
 						<hr class="about-hr" />
 					{/if}
-					{#if info.bio.birthday}
+					{#if info.bio.birthday?.month && info.bio.birthday?.day}
 						<p>
 							<strong>Birthday:</strong>
 							{MONTHS[info.bio.birthday.month]}

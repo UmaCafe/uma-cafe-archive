@@ -40,7 +40,10 @@
 	<h1>Editing: {collection}/{document}</h1>
 	<button on:click={() => goto('../home')}>Back</button>
 	<button on:click={() => (mode = 'preview')}>Preview</button>
-	<ObjectView {exampleObject} objectOriginal={object} {objectToEdit} />
+
+	{#each Object.keys(exampleObject) as key}
+		<ObjectView {exampleObject} objectOriginal={object} {objectToEdit} {key} />
+	{/each}
 {:else if mode == 'preview'}
 	<h1>Previewing changes to: {collection}/{document}</h1>
 	<button on:click={() => (mode = 'edit')}>Back to Editing</button>

@@ -8,6 +8,7 @@ export type CharacterObject = {
 		colors?: CharacterColors;
 	};
 	images: CharacterImages;
+	visible?: boolean;
 };
 
 export type CharacterName = {
