@@ -20,6 +20,7 @@
 		"@types/marked": "^3.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
+		"aws-sdk": "^2.1068.0",
 		"cookie": "^0.4.1",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",

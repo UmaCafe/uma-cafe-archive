@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCharacterInfo, getImageUrl } from '$lib/content';
+	import { getCharacterInfo, getContentUrl } from '$lib/content';
 	import type { CharacterObject } from '$lib/types/character';
 
 	export let charId: string | null = null;
@@ -16,7 +16,7 @@
 			?.sub ?? 'ccd'};"
 	>
 		<div class="img-box">
-			<img src={getImageUrl(charInfo.images.icon)} alt="" width="140" />
+			<img src={getContentUrl(charInfo.images.icon)} alt="" width="140" height="140" />
 		</div>
 		<div class="capt-box">
 			<span>{charInfo.info.name.translated}</span>

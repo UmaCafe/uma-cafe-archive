@@ -8,7 +8,7 @@ const config = {
 		target: '#root',
 		adapter: node({}),
 		files: {
-			assets: 'content/public'
+			assets: 'public'
 		}
 	}
 };

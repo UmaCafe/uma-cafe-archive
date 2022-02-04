@@ -1,20 +1,16 @@
 import { browser } from '$app/env';
 import type { QueryDocumentSnapshot } from '@google-cloud/firestore';
 import { get, writable } from 'svelte/store';
-import { characterDb, pageDb, raceDb } from './db/firestore';
+import { characterDb, pageDb, raceDb } from './external/firestore';
 import type { CharacterObject } from './types/character';
 import type { RaceObject } from './types/race';
 
 export const CHAR_DATA = writable(new Map<string, CharacterObject>());
 export const RACE_DATA = writable(new Map<string, RaceObject>());
 
-/**
- * Transform an image name relative to the images folder into the absolute path used by an <img> tag
- * @param image The image filename or path relative to `$content/public/images`, omitting leading slash
- * @returns Absolute image path
- */
-export function getImageUrl(image: string): string {
-	return `/images/${image}`;
+export function getContentUrl(fileName: string): string {
+	if (fileName.startsWith('/')) fileName = fileName.substring(1);
+	return `https://static.uma.cafe/${fileName}`;
 }
 
 export function pagePathToDocId(pagePath: string): string {

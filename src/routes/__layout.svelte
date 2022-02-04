@@ -77,17 +77,17 @@
 					type: 'image',
 					image: [
 						{
-							src: '/images/background/bg_icon_01.png',
+							src: '/background/bg_icon_01.png',
 							width: 138,
 							height: 139
 						},
 						{
-							src: '/images/background/bg_icon_02.png',
+							src: '/background/bg_icon_02.png',
 							width: 132,
 							height: 124
 						},
 						{
-							src: '/images/background/bg_icon_03.png',
+							src: '/background/bg_icon_03.png',
 							width: 123,
 							height: 127
 						}
@@ -149,9 +149,14 @@
 		box-shadow: 10px 10px 20px #ccd, -10px 10px 20px #ccd;
 		color: #222;
 		width: 100%;
-		padding-left: 1rem;
-		padding-right: 1rem;
+		padding: 0 1rem;
 		flex-grow: 1;
+	}
+
+	@media (max-width: 768px) {
+		.content-box {
+			padding: 0 0.5rem;
+		}
 	}
 
 	.content {
@@ -254,7 +259,7 @@
 		width: 100%;
 		height: 100%;
 		z-index: -1;
-		background-image: url(/images/background/bg_main.jpg);
+		background-image: url(/background/bg_main.jpg);
 		background-position: 50% 0;
 		background-repeat: repeat;
 		padding: 0;
@@ -262,7 +267,7 @@
 	}
 
 	:global(body.dark) .background {
-		background-image: url(/images/background/bg_dark.jpg);
+		background-image: url(/background/bg_dark.jpg);
 	}
 
 	:global(#tsparticles) {

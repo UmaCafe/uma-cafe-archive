@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getImageUrl } from '$lib/content';
+	import { getContentUrl } from '$lib/content';
 	import type { CharacterObject } from '$lib/types/character';
-	import { MONTHS, ordinalNumber } from '$lib/util';
+	import { MONTHS,ordinalNumber } from '$lib/util';
 	import InfoPanel from '../info_panel.svelte';
 	import TabBox from '../tab_box.svelte';
 
@@ -11,12 +11,14 @@
 	let imageTabs = [
 		{ label: 'Uniform', value: 'seifuku' },
 		{ label: 'Racing Outfit (Game)', value: 'shoubufuku' },
-		{ label: 'Racing Outfit (Original)', value: 'proto' }
+		{ label: 'Racing Outfit (Original)', value: 'proto' },
+		{ label: 'Starting Future', value: 'stage' }
 	];
 	$: imageTabs = imageTabs.filter((v) => {
 		if (v.value == 'seifuku') return charObj.images.seifuku;
 		if (v.value == 'shoubufuku') return charObj.images.shoubufuku;
 		if (v.value == 'proto') return charObj.images.proto;
+		if (v.value == 'stage') return charObj.images.stage;
 	});
 
 	let descTabs = [
@@ -45,7 +47,7 @@
 		<TabBox tabs={imageTabs} let:value>
 			{#each imageTabs as val}
 				<div hidden={value != val.value}>
-					<img src={getImageUrl(charObj.images[value])} alt={info.name.translated} />
+					<img src={getContentUrl(charObj.images[val.value])} alt={info.name.translated} />
 				</div>
 			{/each}
 		</TabBox>
@@ -110,7 +112,7 @@
 				<div hidden={value != 'voice'}>
 					{#if info.voice.voiceSample}
 						<div class="voice-box">
-							<audio controls src={info.voice.voiceSample}>
+							<audio controls src={getContentUrl(info.voice.voiceSample)}>
 								<track kind="captions" />
 							</audio>
 						</div>
@@ -140,7 +142,7 @@
 				<div hidden={value != 'counterpart'}>
 					{#if charObj.images.counterpart}
 						<div class="img-box">
-							<img src={getImageUrl(charObj.images.counterpart)} alt={info.name.translated} />
+							<img src={getContentUrl(charObj.images.counterpart)} alt={info.name.translated} />
 						</div>
 					{/if}
 					{#if info.counterpart.sex}

@@ -82,10 +82,11 @@ export type CharacterColors = {
 };
 
 export type CharacterImages = {
+	icon: string;
 	thumb: string;
 	shoubufuku?: string;
 	seifuku?: string;
 	proto?: string;
-	icon: string;
+	stage?: string;
 	counterpart?: string;
 };

@@ -1,5 +1,5 @@
 import { FieldValue } from '@google-cloud/firestore';
-import { editorsDb, getCollection } from './db/firestore';
+import { editorsDb, getCollection } from './external/firestore';
 import type { EditorObject } from './types/editors';
 import type { ChangeInstance } from './util';
 

@@ -40,7 +40,7 @@ export const CHARACTER_EXAMPLE: CharacterObject = {
 		voice: {
 			nativeName: '藤井ゆきよ',
 			romanizedName: 'Yukiyo Fujii',
-			voiceSample: '/sound/characters/[folder]/voice.mp3',
+			voiceSample: 'characters/[folder]/voice.mp3',
 			anilistUrl: 'https://anilist.co/staff/106162/Yukiyo-Fujii',
 			malUrl: 'https://myanimelist.net/people/11162/Yukiyo_Fujii',
 			wikipediaUrlEN: 'https://en.wikipedia.org/wiki/Yukiyo_Fujii',
@@ -63,9 +63,10 @@ export const CHARACTER_EXAMPLE: CharacterObject = {
 		icon: 'characters/[folder]/icon.png',
 		thumb: 'characters/[folder]/thumb.png',
 		counterpart: 'characters/[folder]/counterpart.jpg',
-		proto: 'characters/[folder]/proto.png',
-		seifuku: 'characters/[folder]/seifuku.png',
-		shoubufuku: 'characters/[folder]/shoubufuku.png'
+		proto: 'characters/[folder]/proto_raw.png',
+		seifuku: 'characters/[folder]/seifuku_raw.png',
+		shoubufuku: 'characters/[folder]/shoubufuku_raw.png',
+		stage: 'characters/[folder]/stage_raw.png'
 	},
 	visible: false
 };
