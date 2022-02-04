@@ -9,17 +9,6 @@
 		ParticlesComponent = mod.default;
 	});
 
-	let links = [
-		{
-			title: 'Characters',
-			href: '/characters'
-		},
-		{
-			title: 'Races',
-			href: '/races'
-		}
-	];
-
 	let editor: EditorObject = $session.editor;
 </script>
 
@@ -27,11 +16,9 @@
 	<header class="container">
 		<div class="brand"><a href="/">Uma Cafe</a></div>
 		<div class="links">
-			{#each links as link}
-				<div class="link">
-					<a href={link.href}>{link.title}</a>
-				</div>
-			{/each}
+			<div class="link">
+				<a href="/characters">Characters</a>
+			</div>
 		</div>
 	</header>
 </nav>

@@ -62,7 +62,7 @@ export const CHARACTER_EXAMPLE: CharacterObject = {
 	images: {
 		icon: 'characters/[folder]/icon.png',
 		thumb: 'characters/[folder]/thumb.png',
-		counterpart: 'characters/[folder]/counterpart.png',
+		counterpart: 'characters/[folder]/counterpart.jpg',
 		proto: 'characters/[folder]/proto.png',
 		seifuku: 'characters/[folder]/seifuku.png',
 		shoubufuku: 'characters/[folder]/shoubufuku.png'

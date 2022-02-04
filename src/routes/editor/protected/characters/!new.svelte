@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
 	import Metadata from '$lib/components/metadata.svelte';
 	import type { CharacterObject } from '$lib/types/character';
@@ -45,6 +46,7 @@
 <Metadata title="Character Editor" description="Adding new character" />
 
 <h1>Create Character</h1>
+<button on:click={() => goto('../home')}>Back</button>
 <div>
 	<form on:submit|preventDefault={create}>
 		<div>

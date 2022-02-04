@@ -1,4 +1,4 @@
-import { getPageMarkdown } from '$lib/content';
+import { getPageMarkdown, listPagePaths } from '$lib/content';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ query }) => {
@@ -11,6 +11,15 @@ export const get: RequestHandler = async ({ query }) => {
 				body: md
 			};
 		}
+	} else if (query.has('all') && query.get('all')) {
+		const pagePaths = await listPagePaths();
+		return {
+			status: 200,
+			body: JSON.stringify([...pagePaths]),
+			headers: {
+				'content-type': 'application/json'
+			}
+		};
 	}
 	return {
 		status: 400

@@ -56,3 +56,11 @@ export async function createBasic(
 		await docRef.create(data);
 	}
 }
+
+export async function deleteBasic(key: string, collection: string, doc: string): Promise<void> {
+	const editor = await getEditorFromKey(key);
+	if (editor) {
+		const docRef = (await getCollection(collection)).doc(doc);
+		await docRef.firestore.recursiveDelete(docRef);
+	}
+}
