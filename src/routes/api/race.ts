@@ -1,9 +1,9 @@
-import { getAllRaces, getRaceInfo } from '$lib/content/races';
+import { getAllRaces, getRaceInfo } from '$lib/server/races';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async ({ query }) => {
-	if (query.has('id')) {
-		const raceId = query.get('id');
+export const get: RequestHandler = async ({ url }) => {
+	if (url.searchParams.has('id')) {
+		const raceId = url.searchParams.get('id');
 		const info = await getRaceInfo(raceId);
 		if (info) {
 			return {
@@ -14,7 +14,7 @@ export const get: RequestHandler = async ({ query }) => {
 				}
 			};
 		}
-	} else if (query.has('all') && query.get('all')) {
+	} else if (url.searchParams.has('all') && url.searchParams.get('all')) {
 		const infoObjs = await getAllRaces();
 		return {
 			status: 200,

@@ -60,3 +60,18 @@ export function getChangesBetween<T>(
 	}
 	return changes;
 }
+
+export function getContentUrl(fileName: string): string {
+	if (fileName.startsWith('/')) fileName = fileName.substring(1);
+	return `https://static.uma.cafe/${fileName}`;
+}
+
+export function pagePathToDocId(pagePath: string): string {
+	if (pagePath.length == 0) return 'index';
+	return pagePath.replace(/\./g, '').replace(/\//g, '.');
+}
+
+export function docIdToPagePath(docId: string): string {
+	if (docId == 'index') return '';
+	return docId.replace(/\./g, '/');
+}

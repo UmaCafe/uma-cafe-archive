@@ -1,15 +1,15 @@
 <script lang="ts" context="module">
+	import { getCharacterInfo } from '$lib/client/characters';
 	import EditorView from '$lib/components/editor/editor_view.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import CharacterPage from '$lib/components/pages/character_page.svelte';
-	import { getCharacterInfo } from '$lib/content/characters';
 	import { CHARACTER_METADATA } from '$lib/editmeta/character';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 
-	export const load: Load = async ({ page }) => {
-		let charId = page.params.charId;
-		const charObj = await getCharacterInfo(charId);
+	export const load: Load = async ({ fetch, params }) => {
+		let charId = params.charId;
+		const charObj = await getCharacterInfo(fetch, charId);
 		if (charObj) {
 			return {
 				props: {

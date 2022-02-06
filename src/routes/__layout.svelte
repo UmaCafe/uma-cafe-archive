@@ -37,7 +37,7 @@
 				{#if editor}
 					<span>Editor: {editor.name}</span>
 					<a href="/editor/protected/home">Editor Home</a>
-					<a href="/api/auth">Logout</a>
+					<a href="/api/auth" rel="external">Logout</a>
 				{:else}
 					<a href="/editor/login">Editor Login</a>
 				{/if}

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { docIdToPagePath, pagePathToDocId } from '$lib/content/pages';
+	import { docIdToPagePath, pagePathToDocId } from '$lib/util';
 
 	function create() {
 		const baseMd = `---\ntitle: ${pageTitle}\ndescription: ${pageDescription}\n---\n\n# ${pageTitle}\n`;
@@ -48,7 +48,8 @@
 				/></label
 			>
 			<div>
-				Page will be accessible at: <pre>{window?.location?.origin ?? '[origin]'}/{normalizedPath}</pre>
+				Page will be accessible at: <pre>{window?.location?.origin ??
+						'[origin]'}/{normalizedPath}</pre>
 			</div>
 		</div>
 		<div>

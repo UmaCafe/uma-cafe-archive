@@ -1,8 +1,8 @@
-import { createBasic, deleteBasic, getEditorFromKey, makeEdit } from '$lib/editor';
+import { createBasic, deleteBasic, getEditorFromKey, makeEdit } from '$lib/server/editor';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const post: RequestHandler = async ({ body }) => {
-	const { editorKey, collection, document, changes } = JSON.parse(body as string);
+export const post: RequestHandler = async ({ request }) => {
+	const { editorKey, collection, document, changes } = await request.json();
 	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {
@@ -25,8 +25,8 @@ export const post: RequestHandler = async ({ body }) => {
 	};
 };
 
-export const put: RequestHandler = async ({ body }) => {
-	const { editorKey, collection, document, data } = JSON.parse(body as string);
+export const put: RequestHandler = async ({ request }) => {
+	const { editorKey, collection, document, data } = await request.json();
 	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {
@@ -49,8 +49,8 @@ export const put: RequestHandler = async ({ body }) => {
 	};
 };
 
-export const del: RequestHandler = async ({ body }) => {
-	const { editorKey, collection, document } = JSON.parse(body as string);
+export const del: RequestHandler = async ({ request }) => {
+	const { editorKey, collection, document } = await request.json();
 	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {

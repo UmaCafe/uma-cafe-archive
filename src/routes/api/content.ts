@@ -1,9 +1,9 @@
-import { getPageMarkdown, listPagePaths } from '$lib/content/pages';
+import { getPageMarkdown, listPagePaths } from '$lib/server/pages';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async ({ query }) => {
-	if (query.has('page')) {
-		const page = query.get('page');
+export const get: RequestHandler = async ({ url }) => {
+	if (url.searchParams.has('page')) {
+		const page = url.searchParams.get('page');
 		const md = await getPageMarkdown(page);
 		if (md) {
 			return {
@@ -11,7 +11,7 @@ export const get: RequestHandler = async ({ query }) => {
 				body: md
 			};
 		}
-	} else if (query.has('all') && query.get('all')) {
+	} else if (url.searchParams.has('all') && url.searchParams.get('all')) {
 		const pagePaths = await listPagePaths();
 		return {
 			status: 200,

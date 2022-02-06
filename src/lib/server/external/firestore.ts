@@ -1,11 +1,10 @@
 import type { EditorObject } from '$lib/types/editors';
-import type { CollectionReference } from '@google-cloud/firestore';
-import { Firestore } from '@google-cloud/firestore';
-import type { CharacterObject } from '../types/character';
-import type { RaceObject } from '../types/race';
+import { CollectionReference, getFirestore } from 'firebase-admin/firestore';
+import type { CharacterObject } from '../../types/character';
+import type { RaceObject } from '../../types/race';
 
 export async function getCollection<T>(collectionId: string): Promise<CollectionReference<T>> {
-	const firestore = new Firestore();
+	const firestore = getFirestore();
 	return firestore.collection(collectionId).withConverter<T>({
 		toFirestore: (data: T) => data,
 		fromFirestore: (snap) => snap.data() as T

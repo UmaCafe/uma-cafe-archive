@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { getCharacterInfo } from '$lib/content/characters';
-	import { getContentUrl } from '$lib/content/util';
+	import { getCharacterInfo } from '$lib/client/characters';
 	import type { CharacterObject } from '$lib/types/character';
+	import { getContentUrl } from '$lib/util';
 
 	export let charId: string | null = null;
 	export let charInfo: CharacterObject | null = null;
 	if (charId) {
-		getCharacterInfo(charId).then((val) => (charInfo = val));
+		getCharacterInfo(fetch, charId).then((val) => (charInfo = val));
 	}
 </script>
 

@@ -1,14 +1,14 @@
 <script lang="ts" context="module">
+	import { getPageMarkdown } from '$lib/client/pages';
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getPageMarkdown } from '$lib/content/pages';
 	import type { Load } from '@sveltejs/kit';
 	import frontmatter from 'front-matter';
 	import marked from 'marked';
 
-	export const load: Load = async ({ page }) => {
-		let path = page.params.pagePath;
-		const markdown = await getPageMarkdown(path);
+	export const load: Load = async ({ fetch, params }) => {
+		let path = params.pagePath;
+		const markdown = await getPageMarkdown(fetch, path);
 		if (markdown) {
 			return {
 				props: {

@@ -1,17 +1,17 @@
 <script lang="ts" context="module">
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
+	import { getPageMarkdown } from '$lib/client/pages';
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getPageMarkdown, pagePathToDocId } from '$lib/content/pages';
-	import { getChangesBetween } from '$lib/util';
+	import { getChangesBetween, pagePathToDocId } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
 	import frontmatter from 'front-matter';
 	import marked from 'marked';
 
-	export const load: Load = async ({ page }) => {
-		let path = page.params.pagePath;
-		const markdown = await getPageMarkdown(path);
+	export const load: Load = async ({ fetch, params }) => {
+		let path = params.pagePath;
+		const markdown = await getPageMarkdown(fetch, path);
 		if (markdown) {
 			return {
 				props: {
