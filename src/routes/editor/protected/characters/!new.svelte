@@ -52,6 +52,7 @@
 	<form on:submit|preventDefault={create}>
 		<div>
 			<label
+				title="Try to keep to dash-separated english names, all lowercase. (eg rice-shower, haru-urara, mayano-top-gun)"
 				>Character ID: <input
 					type="text"
 					bind:value={charId}
@@ -82,6 +83,8 @@
 		</div>
 		<div>
 			<label
+				title={'Name of the folder to store images and other assets. Should be the same as the' +
+					" ID on the official website (eg umamusume.jp/character/detail/?name=riceshower => 'riceshower' would be the folder name)"}
 				>Asset folder name: <input
 					type="text"
 					bind:value={folderName}
@@ -94,3 +97,11 @@
 		{#if errorMsg}<div style="color: red;">{errorMsg}</div>{/if}
 	</form>
 </div>
+
+<style>
+	[title] {
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		cursor: help;
+	}
+</style>

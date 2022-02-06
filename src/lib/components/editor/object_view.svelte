@@ -75,7 +75,8 @@
 					<input
 						type="number"
 						placeholder={`${meta.example ?? ''}`}
-						bind:value={objectToEdit[key]}
+						value={ensure(objectToEdit[key], 0)}
+						on:change={(ev) => (objectToEdit[key] = ev.target['value'])}
 					/></label
 				>{#if objectToEdit?.[key] != objectOriginal?.[key]}
 					<span>*</span>
@@ -105,7 +106,8 @@
 					list={meta.type == 'suggest' ? meta.name : undefined}
 					style="width: 100%"
 					placeholder={`${meta.example ?? ''}`}
-					bind:value={objectToEdit[key]}
+					value={ensure(objectToEdit[key], '')}
+					on:change={(ev) => (objectToEdit[key] = ev.target['value'])}
 				/></label
 			>
 			{#if meta.type == 'suggest'}
