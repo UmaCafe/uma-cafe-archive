@@ -1,9 +1,9 @@
-import { getAllCharacters, getCharacterInfo } from '$lib/content/characters';
+import { getAllCharacters, getCharacterInfo } from '$lib/server/characters';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async ({ query }) => {
-	if (query.has('id')) {
-		const charId = query.get('id');
+export const get: RequestHandler = async ({ url }) => {
+	if (url.searchParams.has('id')) {
+		const charId = url.searchParams.get('id');
 		const info = await getCharacterInfo(charId);
 		if (info) {
 			return {
@@ -14,8 +14,10 @@ export const get: RequestHandler = async ({ query }) => {
 				}
 			};
 		}
-	} else if (query.has('all') && query.get('all')) {
-		const infoObjs = await getAllCharacters(query.has('invis') && query.get('invis') == '1');
+	} else if (url.searchParams.has('all') && url.searchParams.get('all')) {
+		const infoObjs = await getAllCharacters(
+			url.searchParams.has('invis') && url.searchParams.get('invis') == '1'
+		);
 		return {
 			status: 200,
 			body: JSON.stringify([...infoObjs]),

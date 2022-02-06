@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContentUrl } from '$lib/content/util';
+	import { getContentUrl } from '$lib/util';
 	import type { CharacterObject } from '$lib/types/character';
 	import { MONTHS, ordinalNumber } from '$lib/util';
 	import InfoPanel from '../info_panel.svelte';

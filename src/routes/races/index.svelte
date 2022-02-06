@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
+	import { getAllRaces } from '$lib/client/races';
 	import Metadata from '$lib/components/metadata.svelte';
 	import RaceDisplay from '$lib/components/race_display.svelte';
-	import { getAllRaces } from '$lib/content/races';
 	import type { RaceObject } from '$lib/types/race';
 	import type { Load } from '@sveltejs/kit';
 
-	export const load: Load = async () => {
-		const races = await getAllRaces();
+	export const load: Load = async ({ fetch }) => {
+		const races = await getAllRaces(fetch);
 		return {
 			props: {
 				races

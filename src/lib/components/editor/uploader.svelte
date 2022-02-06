@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { session } from '$app/stores';
-	import { getContentUrl } from '$lib/content/util';
-	import { listContentObjects } from '$lib/editor';
+	import { listContentObjects } from '$lib/client/editor';
+	import { getContentUrl } from '$lib/util';
+	import { onMount } from 'svelte';
 
 	export let allowedTypes: string;
 	export let filePrefix: string = '';
@@ -12,15 +13,21 @@
 	export let error: Function = () => {};
 
 	let fileExists = false;
+	let mounted = false;
+	onMount(() => {
+		mounted = true;
+	});
 	$: {
-		let fname = fullFilePath;
-		if (!fname && defaultFilename) {
-			fname = `${filePrefix}/${defaultFilename}`;
+		if (mounted) {
+			let fname = fullFilePath;
+			if (!fname && defaultFilename) {
+				fname = `${filePrefix}/${defaultFilename}`;
+			}
+			listContentObjects(fetch, $session.editor.key, fname).then((objs) => {
+				fileExists = objs.length > 0;
+				if (fileExists) fullFilePath = fname;
+			});
 		}
-		listContentObjects($session.editor.key, fname).then((objs) => {
-			fileExists = objs.length > 0;
-			if (fileExists) fullFilePath = fname;
-		});
 	}
 
 	function uploadObject(): void {

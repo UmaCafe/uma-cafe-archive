@@ -7,7 +7,7 @@
 	export let rawDescription: boolean = false;
 	export let image: string = undefined;
 
-	$: url = `${$page.host}${$page.path}`;
+	$: url = `${$page.url.href}`;
 	$: displayTitle = title ? `${title} - Uma Cafe` : `Uma Cafe`;
 </script>
 

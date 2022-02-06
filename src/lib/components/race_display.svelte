@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { getRaceInfo } from '$lib/content/races';
+	import { getRaceInfo } from '$lib/client/races';
 	import type { RaceObject } from '$lib/types/race';
 
 	export let raceId: string | null = null;
 	export let raceInfo: RaceObject | null = null;
 	if (raceId) {
-		getRaceInfo(raceId).then((val) => (raceInfo = val));
+		getRaceInfo(fetch, raceId).then((val) => (raceInfo = val));
 	}
 
 	function trackString() {

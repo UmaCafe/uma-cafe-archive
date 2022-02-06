@@ -1,3 +1,11 @@
 /// <reference types="@sveltejs/kit" />
 
-declare module 'svelte-particles' {}
+import type { EditorObject } from './lib/types/editors';
+
+declare global {
+	namespace App {
+		interface Session {
+			editor?: EditorObject;
+		}
+	}
+}

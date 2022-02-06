@@ -5,7 +5,6 @@ import preprocess from 'svelte-preprocess';
 const config = {
 	preprocess: preprocess(),
 	kit: {
-		target: '#root',
 		adapter: node({}),
 		files: {
 			assets: 'public'

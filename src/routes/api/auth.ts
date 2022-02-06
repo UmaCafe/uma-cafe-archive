@@ -1,4 +1,4 @@
-import { getEditorFromKey } from '$lib/editor';
+import { getEditorFromKey } from '$lib/server/editor';
 import type { RequestHandler } from '@sveltejs/kit';
 import * as cookie from 'cookie';
 
@@ -14,8 +14,8 @@ export const get: RequestHandler = async () => {
 	};
 };
 
-export const post: RequestHandler = async ({ body }) => {
-	const { password } = JSON.parse(body as string);
+export const post: RequestHandler = async ({ request }) => {
+	const { password } = await request.json();
 	if (password) {
 		const editor = await getEditorFromKey(password);
 		if (editor) {

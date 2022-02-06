@@ -1,20 +1,28 @@
-import { getEditorFromKey } from '$lib/editor';
+import { getEditorFromKey } from '$lib/server/editor';
 import type { GetSession, Handle } from '@sveltejs/kit';
 import * as cookie from 'cookie';
+import * as firebase from 'firebase-admin';
+import { applicationDefault, initializeApp } from 'firebase-admin/app';
 
-export const handle: Handle = async ({ request, resolve }) => {
-	if (request.headers.cookie) {
-		const cookies = cookie.parse(request.headers.cookie);
+if (!firebase.apps || firebase.apps.length <= 0) {
+	initializeApp({
+		credential: applicationDefault()
+	});
+}
+
+export const handle: Handle = async ({ event, resolve }) => {
+	if (event.request.headers.has('cookie')) {
+		const cookies = cookie.parse(event.request.headers.get('cookie'));
 
 		if (cookies['editor_key']) {
 			const editorObj = await getEditorFromKey(cookies['editor_key']);
 			if (editorObj) {
-				request.locals['editor'] = editorObj;
+				event.locals['editor'] = editorObj;
 			}
 		}
 	}
 
-	const response = await resolve(request);
+	const response = await resolve(event);
 	return response;
 };
 

@@ -13,15 +13,12 @@
 		"importData": "npx -p node-firestore-import-export firestore-import -a gcloud_credentials.json -b database.json"
 	},
 	"devDependencies": {
-		"@google-cloud/firestore": "^5.0.2",
-		"@sveltejs/adapter-node": "^1.0.0-next.51",
-		"@sveltejs/kit": "next",
+		"@sveltejs/adapter-node": "^1.0.0-next.67",
+		"@sveltejs/kit": "^1.0.0-next.260",
 		"@types/cookie": "^0.4.1",
 		"@types/marked": "^3.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
-		"aws-sdk": "^2.1068.0",
-		"cookie": "^0.4.1",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",
@@ -35,6 +32,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"aws-sdk": "^2.1069.0",
+		"cookie": "^0.4.2",
+		"firebase-admin": "^10.0.2",
 		"front-matter": "^4.0.2",
 		"marked": "^3.0.4",
 		"svelte-particles": "^1.18.2"

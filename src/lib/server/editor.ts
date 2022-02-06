@@ -1,9 +1,8 @@
-import { browser } from '$app/env';
-import { FieldValue } from '@google-cloud/firestore';
+import type { EditorObject } from '$lib/types/editors';
+import type { ChangeInstance } from '$lib/util';
+import { FieldValue } from 'firebase-admin/firestore';
 import { editorsDb, getCollection } from './external/firestore';
 import { listObjects } from './external/s3';
-import type { EditorObject } from './types/editors';
-import type { ChangeInstance } from './util';
 
 /*
  * Note that this editor login system is likely temporary - I just need an easy way to get started.
@@ -67,28 +66,14 @@ export async function deleteBasic(key: string, collection: string, doc: string):
 	}
 }
 
-export async function listContentObjects(key: string, folder: string): Promise<{ name: string }[]> {
-	if (!browser) {
-		const objects = await listObjects(folder);
-		return objects
-			.filter((obj) => {
-				const path = obj.Key.split('/');
-				return path[path.length - 1] != '.bzEmpty'; // ignore folder keep files
-			})
-			.map((obj) => {
-				return { name: obj.Key };
-			});
-	} else {
-		const resp = await fetch(`/api/files`, {
-			method: 'POST',
-			body: JSON.stringify({
-				editorKey: key,
-				folder
-			})
+export async function listContentObjects(folder: string): Promise<{ name: string }[]> {
+	const objects = await listObjects(folder);
+	return objects
+		.filter((obj) => {
+			const path = obj.Key.split('/');
+			return path[path.length - 1] != '.bzEmpty'; // ignore folder keep files
+		})
+		.map((obj) => {
+			return { name: obj.Key };
 		});
-		if (resp.status == 200) {
-			return await resp.json();
-		}
-	}
-	return [];
 }

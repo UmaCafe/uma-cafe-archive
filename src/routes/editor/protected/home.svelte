@@ -1,17 +1,18 @@
 <script lang="ts" context="module">
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
+	import { getAllCharacters } from '$lib/client/characters';
+	import { listContentObjects } from '$lib/client/editor';
+	import { listPagePaths } from '$lib/client/pages';
 	import Uploader from '$lib/components/editor/uploader.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getAllCharacters } from '$lib/content/characters';
-	import { listPagePaths, pagePathToDocId } from '$lib/content/pages';
-	import { listContentObjects } from '$lib/editor';
 	import type { CharacterObject } from '$lib/types/character';
+	import { pagePathToDocId } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
-	export const load: Load = async ({ session }) => {
-		const chars = await getAllCharacters(true);
-		const pagePaths = await listPagePaths();
-		const imageObjects = await listContentObjects(session.editor.key, 'images/');
+	export const load: Load = async ({ fetch, session }) => {
+		const chars = await getAllCharacters(fetch, true);
+		const pagePaths = await listPagePaths(fetch);
+		const imageObjects = await listContentObjects(fetch, session.editor.key, 'images/');
 		return {
 			props: {
 				chars,

@@ -4,6 +4,11 @@ steps:
       - cp
       - gs://build-util/s3_credentials.json
       - s3_credentials.json
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      - cp
+      - gs://build-util/gcloud_credentials.json
+      - gcloud_credentials.json
   - name: gcr.io/cloud-builders/docker
     args:
       - build
