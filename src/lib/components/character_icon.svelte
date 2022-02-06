@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getCharacterInfo, getContentUrl } from '$lib/content';
+	import { getCharacterInfo } from '$lib/content/characters';
+	import { getContentUrl } from '$lib/content/util';
 	import type { CharacterObject } from '$lib/types/character';
 
 	export let charId: string | null = null;

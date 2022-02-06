@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContentUrl } from '$lib/content';
+	import { getContentUrl } from '$lib/content/util';
 	import type { Token } from 'marked';
 	import Heading from './heading.svelte';
 	import HtmlExt from './html_ext.svelte';

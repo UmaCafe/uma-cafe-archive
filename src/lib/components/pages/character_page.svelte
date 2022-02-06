@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getContentUrl } from '$lib/content';
+	import { getContentUrl } from '$lib/content/util';
 	import type { CharacterObject } from '$lib/types/character';
-	import { MONTHS,ordinalNumber } from '$lib/util';
+	import { MONTHS, ordinalNumber } from '$lib/util';
 	import InfoPanel from '../info_panel.svelte';
 	import TabBox from '../tab_box.svelte';
 
@@ -155,7 +155,7 @@
 								: undefined}
 						</p>
 					{/if}
-					{#if info.counterpart.record}
+					{#if info.counterpart.record?.total || info.counterpart.record?.wins}
 						<p>
 							<strong>Record:</strong>
 							{info.counterpart.record.total} Races, {info.counterpart.record.wins} Wins

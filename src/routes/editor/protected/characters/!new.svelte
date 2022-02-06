@@ -15,7 +15,8 @@
 					native: nameNative,
 					translated: nameTranslated
 				}
-			}
+			},
+			assetId: folderName
 		};
 
 		fetch(`/api/edit`, {

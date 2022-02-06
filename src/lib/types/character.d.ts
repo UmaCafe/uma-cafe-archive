@@ -7,6 +7,7 @@ export type CharacterObject = {
 		counterpart?: CharacterCounterpart;
 		colors?: CharacterColors;
 	};
+	assetId: string;
 	images: CharacterImages;
 	visible?: boolean;
 };

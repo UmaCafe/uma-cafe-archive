@@ -1,93 +1,147 @@
 <script lang="ts">
-	type T = $$Generic<Object>;
-	export let exampleObject: T;
+	import type { EditorMetadata, ObjectEditorMeta } from '$lib/types/editors';
+	import Uploader from './uploader.svelte';
+
+	type T = $$Generic<Record<string, unknown>>;
+	export let metaObject: EditorMetadata<T>;
 	export let objectOriginal: T;
 	export let objectToEdit: T;
-	export let key: string;
+	export let globalMeta: ObjectEditorMeta;
 
-	if (typeof exampleObject[key] == 'object') {
-		if (!(key in objectOriginal)) objectOriginal[key] = Array.isArray(exampleObject[key]) ? [] : {};
-		if (!(key in objectToEdit)) objectToEdit[key] = Array.isArray(exampleObject[key]) ? [] : {};
+	// svelte doesn't like type casting in blocks at the moment
+	function ensure<T>(obj: unknown, _as: T): T {
+		return obj as T;
 	}
+
+	let objects: [EditorMetadata<T>[keyof T], keyof T][];
+	$: objects = Object.keys(metaObject).map((k: keyof T) => {
+		const meta = metaObject[k];
+		if (meta.type == 'object' || meta.type == 'array') {
+			if (!(k in objectOriginal))
+				Object.assign(objectOriginal, { [k]: meta.type == 'array' ? [] : {} });
+			if (!(k in objectToEdit))
+				Object.assign(objectToEdit, { [k]: meta.type == 'array' ? [] : {} });
+		}
+		return [meta, k];
+	});
 </script>
 
-<div class="obj">
-	{#if Array.isArray(exampleObject[key])}
-		<h3>{key}</h3>
-		<button
-			on:click={() => {
-				objectToEdit[key].push({});
-				objectToEdit[key] = objectToEdit[key]; // force update
-			}}>Add</button
-		>
-		{#each objectToEdit[key] as obj, i}
-			<div class="obj">
+{#each objects as [meta, key]}
+	<div class="obj">
+		{#if meta.type == 'array'}
+			<h3>{meta.name}</h3>
+			<button
+				on:click={() => {
+					ensure(objectToEdit[key], []).push({});
+					objectToEdit[key] = objectToEdit[key]; // force update
+				}}>Add</button
+			>
+			{#if ensure(objectToEdit[key], []).length != ensure(objectOriginal[key], []).length}
 				<button
 					on:click={() => {
-						objectToEdit[key].splice(i, 1);
+						Object.assign(objectToEdit, { [key]: ensure(objectOriginal[key], []).slice() });
 						objectToEdit[key] = objectToEdit[key]; // force update
-					}}>X</button
+					}}>Revert</button
 				>
-				{#each Object.keys(exampleObject[key][0]) as objKey}
+			{/if}
+			{#each ensure(objectToEdit[key], []) as obj, i}
+				<div class="obj">
+					<button
+						on:click={() => {
+							ensure(objectToEdit[key], []).splice(i, 1);
+							objectToEdit[key] = objectToEdit[key]; // force update
+						}}>X</button
+					>
 					<svelte:self
-						exampleObject={exampleObject[key][0]}
-						objectOriginal={objectOriginal[key][i]}
-						objectToEdit={obj}
-						key={objKey}
+						metaObject={meta.entry}
+						objectOriginal={objectOriginal[key][i] ?? {}}
+						objectToEdit={obj ?? {}}
+						{globalMeta}
 					/>
-				{/each}
-			</div>
-		{/each}
-	{:else if typeof exampleObject[key] == 'object'}
-		<h3>{key}</h3>
-		{#each Object.keys(exampleObject[key]) as objKey}
+				</div>
+			{/each}
+		{:else if meta.type == 'object'}
+			<h3>{meta.name}</h3>
 			<svelte:self
-				exampleObject={exampleObject[key]}
-				objectOriginal={objectOriginal?.[key]}
-				objectToEdit={objectToEdit?.[key]}
-				key={objKey}
+				metaObject={meta.children}
+				objectOriginal={objectOriginal?.[key] ?? {}}
+				objectToEdit={objectToEdit?.[key] ?? {}}
+				{globalMeta}
 			/>
-		{/each}
-	{:else if typeof exampleObject[key] == 'number'}
-		<div>
-			<label
-				><strong>{key}:</strong>
+		{:else if meta.type == 'number'}
+			<div>
+				<label title={meta.description}
+					><strong>{meta.name}:</strong>
+					<input
+						type="number"
+						placeholder={`${meta.example ?? ''}`}
+						bind:value={objectToEdit[key]}
+					/></label
+				>{#if objectToEdit?.[key] != objectOriginal?.[key]}
+					<span>*</span>
+					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+				{/if}
+			</div>
+		{:else if meta.type == 'boolean'}
+			<label title={meta.description}
+				><strong>{meta.name}:</strong>
 				<input
-					type="number"
-					placeholder={exampleObject[key]}
+					type="checkbox"
+					checked={ensure(objectToEdit[key], true)}
+					on:change={(ev) => (objectToEdit[key] = ev.target['checked'])}
+				/>{#if objectToEdit?.[key] != objectOriginal?.[key]}
+					<span>*</span>
+					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+				{/if}
+			</label>
+		{:else if meta.type == 'string' || meta.type == 'suggest'}
+			<label title={meta.description}
+				><strong>{meta.name}:</strong>{#if objectToEdit?.[key] != objectOriginal?.[key]}
+					<span>*</span>
+					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+				{/if}
+				<input
+					type="text"
+					list={meta.type == 'suggest' ? meta.name : undefined}
+					style="width: 100%"
+					placeholder={`${meta.example ?? ''}`}
 					bind:value={objectToEdit[key]}
 				/></label
-			>{#if objectToEdit?.[key] != objectOriginal?.[key]}
-				<span>*</span>
-				<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+			>
+			{#if meta.type == 'suggest'}
+				<datalist id={meta.name}>
+					{#each meta.suggestions as opt}
+						<option value={opt} />
+					{/each}
+				</datalist>
 			{/if}
-		</div>
-	{:else if typeof exampleObject[key] == 'string'}
-		<label
-			><strong>{key}:</strong>{#if objectToEdit?.[key] != objectOriginal?.[key]}
-				<span>*</span>
-				<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+		{:else if meta.type == 'enum'}
+			<label title={meta.description}
+				><strong>{meta.name}:</strong>
+				<select bind:value={objectToEdit[key]}>
+					<option value={undefined} />
+					{#each meta.choices as choice}
+						<option value={choice.value}>{choice.label}</option>
+					{/each}
+				</select>{#if objectToEdit?.[key] != objectOriginal?.[key]}
+					<span>*</span>
+					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+				{/if}</label
+			>
+		{:else if meta.type == 'file'}
+			<div title={meta.description}><strong>{meta.name}</strong></div>
+			<Uploader
+				allowedTypes={meta.mime}
+				filePrefix={globalMeta.assetFolder}
+				defaultFilename={meta.defaultFileName}
+				bind:fullFilePath={objectToEdit[key]}
+			/>
+			{#if objectToEdit?.[key] != objectOriginal?.[key]}
+				<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>Revert</button>
 			{/if}
-			<input
-				type="text"
-				style="width: 100%"
-				placeholder={exampleObject[key]}
-				bind:value={objectToEdit[key]}
-			/></label
-		>
-	{:else if typeof exampleObject[key] == 'boolean'}
-		<label
-			><strong>{key}:</strong>
-			<input
-				type="checkbox"
-				bind:checked={objectToEdit[key]}
-			/>{#if objectToEdit?.[key] != objectOriginal?.[key]}
-				<span>*</span>
-				<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
-			{/if}
-		</label>
-	{/if}
-</div>
+		{/if}
+	</div>
+{/each}
 
 <style>
 	.obj {
@@ -95,5 +149,11 @@
 		border: 1px solid #aaa;
 		border-radius: 10px;
 		margin: 2px;
+	}
+
+	[title] {
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		cursor: help;
 	}
 </style>

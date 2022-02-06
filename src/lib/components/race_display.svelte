@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getRaceInfo } from '$lib/content';
+	import { getRaceInfo } from '$lib/content/races';
 	import type { RaceObject } from '$lib/types/race';
 
 	export let raceId: string | null = null;

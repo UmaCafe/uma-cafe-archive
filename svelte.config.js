@@ -9,6 +9,11 @@ const config = {
 		adapter: node({}),
 		files: {
 			assets: 'public'
+		},
+		vite: {
+			define: {
+				global: {}
+			}
 		}
 	}
 };

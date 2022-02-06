@@ -1,3 +1,6 @@
+export const IMAGE_MIMES = 'image/png,image/jpeg';
+export const AUDIO_MIMES = 'audio/mpeg';
+
 export function ordinalNumber(num: number): string {
 	let suff = 'th';
 	if (num % 100 < 10 || num % 100 > 20) {

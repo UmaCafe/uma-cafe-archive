@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { docIdToPagePath, pagePathToDocId } from '$lib/content';
+	import { docIdToPagePath, pagePathToDocId } from '$lib/content/pages';
 
 	function create() {
 		const baseMd = `---\ntitle: ${pageTitle}\ndescription: ${pageDescription}\n---\n\n# ${pageTitle}\n`;

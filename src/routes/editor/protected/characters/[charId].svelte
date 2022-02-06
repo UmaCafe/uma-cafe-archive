@@ -2,8 +2,8 @@
 	import EditorView from '$lib/components/editor/editor_view.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import CharacterPage from '$lib/components/pages/character_page.svelte';
-	import { getCharacterInfo } from '$lib/content';
-	import { CHARACTER_EXAMPLE } from '$lib/examples';
+	import { getCharacterInfo } from '$lib/content/characters';
+	import { CHARACTER_METADATA } from '$lib/editmeta/character';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 
@@ -31,8 +31,9 @@
 <EditorView
 	collection="characters"
 	document={charId}
-	exampleObject={CHARACTER_EXAMPLE}
+	metaObject={CHARACTER_METADATA}
 	object={charObj}
+	assetFolder={`characters/${charObj.assetId}`}
 	let:previewObject
 >
 	{#if previewObject}

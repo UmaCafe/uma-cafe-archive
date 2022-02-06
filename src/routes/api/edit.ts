@@ -3,7 +3,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const post: RequestHandler = async ({ body }) => {
 	const { editorKey, collection, document, changes } = JSON.parse(body as string);
-	const editor = getEditorFromKey(editorKey);
+	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {
 			await makeEdit(editorKey, collection, document, changes);
@@ -27,7 +27,7 @@ export const post: RequestHandler = async ({ body }) => {
 
 export const put: RequestHandler = async ({ body }) => {
 	const { editorKey, collection, document, data } = JSON.parse(body as string);
-	const editor = getEditorFromKey(editorKey);
+	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {
 			await createBasic(editorKey, collection, document, data);
@@ -51,7 +51,7 @@ export const put: RequestHandler = async ({ body }) => {
 
 export const del: RequestHandler = async ({ body }) => {
 	const { editorKey, collection, document } = JSON.parse(body as string);
-	const editor = getEditorFromKey(editorKey);
+	const editor = await getEditorFromKey(editorKey);
 	if (editor) {
 		try {
 			await deleteBasic(editorKey, collection, document);

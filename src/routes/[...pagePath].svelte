@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getPageMarkdown } from '$lib/content';
+	import { getPageMarkdown } from '$lib/content/pages';
 	import type { Load } from '@sveltejs/kit';
 	import frontmatter from 'front-matter';
 	import marked from 'marked';

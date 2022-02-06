@@ -1,4 +1,4 @@
-import { getPageMarkdown, listPagePaths } from '$lib/content';
+import { getPageMarkdown, listPagePaths } from '$lib/content/pages';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ query }) => {

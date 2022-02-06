@@ -3,7 +3,7 @@
 	import { session } from '$app/stores';
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getPageMarkdown, pagePathToDocId } from '$lib/content';
+	import { getPageMarkdown, pagePathToDocId } from '$lib/content/pages';
 	import { getChangesBetween } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
 	import frontmatter from 'front-matter';

@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import Metadata from '$lib/components/metadata.svelte';
 	import RaceDisplay from '$lib/components/race_display.svelte';
-	import { getAllRaces } from '$lib/content';
+	import { getAllRaces } from '$lib/content/races';
 	import type { RaceObject } from '$lib/types/race';
 	import type { Load } from '@sveltejs/kit';
 
@@ -24,7 +24,7 @@
 <div class="race-container">
 	<h1>Races</h1>
 	<div class="race-list">
-		{#each [...races] as [raceId, raceInfo]}
+		{#each [...races] as [_raceId, raceInfo]}
 			<div class="race">
 				<RaceDisplay {raceInfo} />
 			</div>

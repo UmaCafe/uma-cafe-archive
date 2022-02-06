@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import CharacterIcon from '$lib/components/character_icon.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import { getAllCharacters } from '$lib/content';
+	import { getAllCharacters } from '$lib/content/characters';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 

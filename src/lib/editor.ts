@@ -1,5 +1,7 @@
+import { browser } from '$app/env';
 import { FieldValue } from '@google-cloud/firestore';
 import { editorsDb, getCollection } from './external/firestore';
+import { listObjects } from './external/s3';
 import type { EditorObject } from './types/editors';
 import type { ChangeInstance } from './util';
 
@@ -63,4 +65,30 @@ export async function deleteBasic(key: string, collection: string, doc: string):
 		const docRef = (await getCollection(collection)).doc(doc);
 		await docRef.firestore.recursiveDelete(docRef);
 	}
+}
+
+export async function listContentObjects(key: string, folder: string): Promise<{ name: string }[]> {
+	if (!browser) {
+		const objects = await listObjects(folder);
+		return objects
+			.filter((obj) => {
+				const path = obj.Key.split('/');
+				return path[path.length - 1] != '.bzEmpty'; // ignore folder keep files
+			})
+			.map((obj) => {
+				return { name: obj.Key };
+			});
+	} else {
+		const resp = await fetch(`/api/files`, {
+			method: 'POST',
+			body: JSON.stringify({
+				editorKey: key,
+				folder
+			})
+		});
+		if (resp.status == 200) {
+			return await resp.json();
+		}
+	}
+	return [];
 }

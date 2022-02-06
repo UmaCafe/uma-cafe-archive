@@ -1,4 +1,4 @@
-import { getAllRaces, getRaceInfo } from '$lib/content';
+import { getAllRaces, getRaceInfo } from '$lib/content/races';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ query }) => {

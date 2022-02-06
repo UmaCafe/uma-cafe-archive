@@ -9,16 +9,23 @@ export function createClient(): S3 {
 
 export const CONTENT_BUCKET = 'uma-cafe-content';
 
-export async function uploadObject(fileName: string, body: S3.Body): Promise<S3.PutObjectOutput> {
+export async function uploadObject(
+	fileName: string,
+	body: S3.Body,
+	contentType?: string
+): Promise<S3.PutObjectOutput> {
 	const s3 = createClient();
 	return new Promise((res, rej) => {
-		s3.putObject({ Bucket: CONTENT_BUCKET, Key: fileName, Body: body }, (err, data) => {
-			if (err) {
-				rej(err);
-			} else {
-				res(data);
+		s3.putObject(
+			{ Bucket: CONTENT_BUCKET, Key: fileName, Body: body, ContentType: contentType },
+			(err, data) => {
+				if (err) {
+					rej(err);
+				} else {
+					res(data);
+				}
 			}
-		});
+		);
 	});
 }
 
@@ -32,4 +39,10 @@ export async function listObjects(folderName: string): Promise<S3.ObjectList> {
 	const s3 = createClient();
 	const res = await s3.listObjects({ Bucket: CONTENT_BUCKET, Prefix: folderName }).promise();
 	return res.Contents;
+}
+
+export async function deleteObject(fileName: string): Promise<S3.DeleteObjectOutput> {
+	const s3 = createClient();
+	const res = await s3.deleteObject({ Bucket: CONTENT_BUCKET, Key: fileName }).promise();
+	return res;
 }

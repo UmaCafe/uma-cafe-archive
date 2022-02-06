@@ -1,4 +1,4 @@
-import { getAllCharacters, getCharacterInfo } from '$lib/content';
+import { getAllCharacters, getCharacterInfo } from '$lib/content/characters';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ query }) => {

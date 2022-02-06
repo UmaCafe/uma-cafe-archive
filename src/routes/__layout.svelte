@@ -3,7 +3,7 @@
 	import type { EditorObject } from '$lib/types/editors';
 	import { onMount } from 'svelte';
 
-	let ParticlesComponent;
+	let ParticlesComponent: unknown;
 	onMount(async () => {
 		const mod = await import('svelte-particles');
 		ParticlesComponent = mod.default;
