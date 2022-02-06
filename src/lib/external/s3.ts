@@ -1,19 +1,19 @@
-import { config, Endpoint, FileSystemCredentials, S3 } from 'aws-sdk';
+import AWS from 'aws-sdk';
 
-export function createClient(): S3 {
-	const creds = new FileSystemCredentials('s3_credentials.json');
-	config.credentials = creds;
-	const endpoint = new Endpoint('s3.us-west-004.backblazeb2.com');
-	return new S3({ endpoint });
+export function createClient(): AWS.S3 {
+	const creds = new AWS.FileSystemCredentials('s3_credentials.json');
+	AWS.config.credentials = creds;
+	const endpoint = new AWS.Endpoint('s3.us-west-004.backblazeb2.com');
+	return new AWS.S3({ endpoint });
 }
 
 export const CONTENT_BUCKET = 'uma-cafe-content';
 
 export async function uploadObject(
 	fileName: string,
-	body: S3.Body,
+	body: AWS.S3.Body,
 	contentType?: string
-): Promise<S3.PutObjectOutput> {
+): Promise<AWS.S3.PutObjectOutput> {
 	const s3 = createClient();
 	return new Promise((res, rej) => {
 		s3.putObject(
@@ -29,19 +29,19 @@ export async function uploadObject(
 	});
 }
 
-export async function getObject(fileName: string): Promise<S3.GetObjectOutput> {
+export async function getObject(fileName: string): Promise<AWS.S3.GetObjectOutput> {
 	const s3 = createClient();
 	const res = await s3.getObject({ Bucket: CONTENT_BUCKET, Key: fileName }).promise();
 	return res;
 }
 
-export async function listObjects(folderName: string): Promise<S3.ObjectList> {
+export async function listObjects(folderName: string): Promise<AWS.S3.ObjectList> {
 	const s3 = createClient();
 	const res = await s3.listObjects({ Bucket: CONTENT_BUCKET, Prefix: folderName }).promise();
 	return res.Contents;
 }
 
-export async function deleteObject(fileName: string): Promise<S3.DeleteObjectOutput> {
+export async function deleteObject(fileName: string): Promise<AWS.S3.DeleteObjectOutput> {
 	const s3 = createClient();
 	const res = await s3.deleteObject({ Bucket: CONTENT_BUCKET, Key: fileName }).promise();
 	return res;
