@@ -1,35 +1,25 @@
-<script type="ts">
-	import { getImageMap } from '$lib/content';
-	import type { CharacterInfo, ImageTag } from '$lib/types/character';
-	import { ordinalNumber } from '$lib/util';
-	import TabBox from './tab_box.svelte';
+<script lang="ts">
+	import { getContentUrl } from '$lib/content/util';
+	import type { CharacterObject } from '$lib/types/character';
+	import { MONTHS, ordinalNumber } from '$lib/util';
+	import InfoPanel from '../info_panel.svelte';
+	import TabBox from '../tab_box.svelte';
 
-	export let charInfo: CharacterInfo;
+	export let charObj: CharacterObject;
+	let info = charObj.info;
 
-	const info = charInfo.info;
-	const images = getImageMap(charInfo);
-
-	const months = {
-		1: 'Jan',
-		2: 'Feb',
-		3: 'Mar',
-		4: 'Apr',
-		5: 'May',
-		6: 'Jun',
-		7: 'Jul',
-		8: 'Aug',
-		9: 'Sep',
-		10: 'Oct',
-		11: 'Nov',
-		12: 'Dec'
-	};
-
-	let imageTabs: Array<{ label: string; value: ImageTag }> = [
+	let imageTabs = [
 		{ label: 'Uniform', value: 'seifuku' },
 		{ label: 'Racing Outfit (Game)', value: 'shoubufuku' },
-		{ label: 'Racing Outfit (Original)', value: 'proto' }
+		{ label: 'Racing Outfit (Original)', value: 'proto' },
+		{ label: 'Starting Future', value: 'stage' }
 	];
-	$: imageTabs = imageTabs.filter((v) => images.has(v.value));
+	$: imageTabs = imageTabs.filter((v) => {
+		if (v.value == 'seifuku') return charObj.images.seifuku;
+		if (v.value == 'shoubufuku') return charObj.images.shoubufuku;
+		if (v.value == 'proto') return charObj.images.proto;
+		if (v.value == 'stage') return charObj.images.stage;
+	});
 
 	let descTabs = [
 		{ label: 'Character Bio', value: 'bio' },
@@ -38,48 +28,43 @@
 	];
 	$: descTabs = descTabs.filter((v) => {
 		if (v.value == 'bio') return info.bio;
-		if (v.value == 'voice') return info.voice;
-		if (v.value == 'counterpart') return info.counterpart;
+		if (v.value == 'voice') return info.voice?.nativeName && info.voice?.romanizedName;
+		if (v.value == 'counterpart') return info.counterpart.sex;
 	});
 </script>
 
-<div
-	class="info-panel"
-	style="--color-main: #{info.colors?.main ?? 'ddf'}; --color-sub: #{info.colors?.sub ?? 'ccd'};"
->
-	<div class="title">
+<InfoPanel mainColor={info.colors.main} subColor={info.colors.sub}>
+	<div slot="title">
 		<h1>{info.name.translated}</h1>
 		<h2>{info.name.native}</h2>
 	</div>
-	<div class="main">
-		<div class="intro-box">
-			{#if info.bio?.intro}
-				<p class="intro"><em>"{info.bio.intro}"</em></p>
-			{/if}
-		</div>
-		<div class="image">
-			<TabBox tabs={imageTabs} let:value>
-				{#each imageTabs as val}
-					<div hidden={value != val.value}>
-						<img src={images.get(val.value)} alt={info.name.translated} />
-					</div>
-				{/each}
-			</TabBox>
-		</div>
-		<div class="desc">
-			<TabBox tabs={descTabs} let:value>
+	<div class="intro-box">
+		{#if info.bio?.intro}
+			<p class="intro"><em>"{info.bio.intro}"</em></p>
+		{/if}
+	</div>
+	<div class="image">
+		<TabBox tabs={imageTabs} let:value>
+			{#each imageTabs as val}
+				<div hidden={value != val.value}>
+					<img src={getContentUrl(charObj.images[val.value])} alt={info.name.translated} />
+				</div>
+			{/each}
+		</TabBox>
+	</div>
+	<div class="desc">
+		<TabBox tabs={descTabs} let:value>
+			{#if info.bio}
 				<div hidden={value != 'bio'}>
 					{#if info.bio.about}
 						<p class="about">{info.bio.about}</p>
 						<hr class="about-hr" />
 					{/if}
-					{#if info.bio.birthday}
+					{#if info.bio.birthday?.month && info.bio.birthday?.day}
 						<p>
 							<strong>Birthday:</strong>
-							{months[info.bio.birthday.month]}
-							{info.bio.birthday.day}{info.bio.birthday.year
-								? `, ${info.bio.birthday.year}`
-								: undefined}
+							{MONTHS[info.bio.birthday.month]}
+							{info.bio.birthday.day}{info.bio.birthday.year ? `, ${info.bio.birthday.year}` : ``}
 						</p>
 					{/if}
 					{#if info.bio.sizes?.height}
@@ -122,10 +107,12 @@
 						<p><strong>Family:</strong> {info.bio.onFamily}</p>
 					{/if}
 				</div>
+			{/if}
+			{#if info.voice}
 				<div hidden={value != 'voice'}>
 					{#if info.voice.voiceSample}
 						<div class="voice-box">
-							<audio controls src={info.voice.voiceSample}>
+							<audio controls src={getContentUrl(info.voice.voiceSample)}>
 								<track kind="captions" />
 							</audio>
 						</div>
@@ -150,10 +137,12 @@
 						{/if}
 					</p>
 				</div>
+			{/if}
+			{#if info.counterpart}
 				<div hidden={value != 'counterpart'}>
-					{#if images.has('counterpart')}
+					{#if charObj.images.counterpart}
 						<div class="img-box">
-							<img src={images.get('counterpart')} alt={info.name.translated} />
+							<img src={getContentUrl(charObj.images.counterpart)} alt={info.name.translated} />
 						</div>
 					{/if}
 					{#if info.counterpart.sex}
@@ -166,7 +155,7 @@
 								: undefined}
 						</p>
 					{/if}
-					{#if info.counterpart.record}
+					{#if info.counterpart.record?.total || info.counterpart.record?.wins}
 						<p>
 							<strong>Record:</strong>
 							{info.counterpart.record.total} Races, {info.counterpart.record.wins} Wins
@@ -192,56 +181,12 @@
 						{/if}
 					</p>
 				</div>
-			</TabBox>
-		</div>
+			{/if}
+		</TabBox>
 	</div>
-</div>
+</InfoPanel>
 
 <style>
-	.info-panel {
-		margin: 10px 0px;
-		border: 15px solid var(--color-main);
-		border-radius: 10px;
-	}
-
-	.title {
-		position: relative;
-		text-align: center;
-		overflow: hidden;
-		padding-bottom: 20px;
-	}
-
-	.title:before {
-		content: '';
-		width: 100%;
-		height: 30px;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		background: var(--color-main);
-		transform: skewY(-1deg) translateY(17px);
-		z-index: 20;
-	}
-
-	.title:after {
-		content: '';
-		width: 100%;
-		height: 30px;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		background: var(--color-sub);
-		transform: skewY(1deg) translateY(10px);
-		z-index: 10;
-	}
-
-	.main {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		border-top: var(--color-main) 10px solid;
-	}
-
 	.image {
 		padding: 20px;
 		flex-grow: 1;

@@ -6,10 +6,11 @@
 
 	export let tabs: Array<Tab>;
 	export let color: string = '#282';
+	export let fontColor: string = '#fff';
 	let value: string = tabs?.[0]?.value ?? '';
 </script>
 
-<div class="tab-box" style="--tab-color: {color};" {...$$restProps}>
+<div class="tab-box" style="--tab-color: {color}; --font-color: {fontColor};" {...$$restProps}>
 	<ul class="tab-list">
 		{#each tabs as tab}
 			<li class:active={tab.value === value}>
@@ -67,7 +68,7 @@
 	}
 
 	.tab-list li.active button {
-		color: #fff;
+		color: var(--font-color);
 		background-color: var(--tab-color);
 	}
 

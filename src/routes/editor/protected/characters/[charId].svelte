@@ -1,7 +1,9 @@
 <script lang="ts" context="module">
+	import EditorView from '$lib/components/editor/editor_view.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import CharacterPage from '$lib/components/pages/character_page.svelte';
 	import { getCharacterInfo } from '$lib/content/characters';
+	import { CHARACTER_METADATA } from '$lib/editmeta/character';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 
@@ -11,6 +13,7 @@
 		if (charObj) {
 			return {
 				props: {
+					charId,
 					charObj
 				}
 			};
@@ -19,13 +22,21 @@
 </script>
 
 <script lang="ts">
+	export let charId: string;
 	export let charObj: CharacterObject;
-	let description = `Information about ${charObj.info.name.translated} from Uma Musume`;
-	if (charObj.info.bio?.about) {
-		description = charObj.info.bio.about;
-	}
 </script>
 
-<Metadata title={charObj.info.name.translated} {description} image={charObj.images.icon} />
+<Metadata title="Character Editor" description="Editing character" />
 
-<CharacterPage {charObj} />
+<EditorView
+	collection="characters"
+	document={charId}
+	metaObject={CHARACTER_METADATA}
+	object={charObj}
+	assetFolder={`characters/${charObj.assetId}`}
+	let:previewObject
+>
+	{#if previewObject}
+		<CharacterPage charObj={previewObject} />
+	{/if}
+</EditorView>

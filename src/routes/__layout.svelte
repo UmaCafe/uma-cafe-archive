@@ -1,32 +1,49 @@
 <script type="ts">
+	import { session } from '$app/stores';
+	import type { EditorObject } from '$lib/types/editors';
 	import { onMount } from 'svelte';
 
-	import navbar from '../../content/navbar.json';
-
-	let ParticlesComponent;
+	let ParticlesComponent: unknown;
 	onMount(async () => {
 		const mod = await import('svelte-particles');
 		ParticlesComponent = mod.default;
 	});
+
+	let editor: EditorObject = $session.editor;
 </script>
 
 <nav>
-	<div class="container">
+	<header class="container">
 		<div class="brand"><a href="/">Uma Cafe</a></div>
 		<div class="links">
-			{#each navbar.links as link}
-				<div class="link">
-					<a href={link.href}>{link.title}</a>
-				</div>
-			{/each}
+			<div class="link">
+				<a href="/characters">Characters</a>
+			</div>
 		</div>
-	</div>
+	</header>
 </nav>
 
 <div class="container content-box">
 	<div class="content">
 		<slot />
 	</div>
+	<footer>
+		<hr />
+		<div class="footer-content">
+			<div class="left">
+				<a href="mailto:snep@uma.cafe">Contact</a>
+			</div>
+			<div class="right">
+				{#if editor}
+					<span>Editor: {editor.name}</span>
+					<a href="/editor/protected/home">Editor Home</a>
+					<a href="/api/auth">Logout</a>
+				{:else}
+					<a href="/editor/login">Editor Login</a>
+				{/if}
+			</div>
+		</div>
+	</footer>
 </div>
 
 <div class="background">
@@ -60,17 +77,17 @@
 					type: 'image',
 					image: [
 						{
-							src: '/images/background/bg_icon_01.png',
+							src: '/background/bg_icon_01.png',
 							width: 138,
 							height: 139
 						},
 						{
-							src: '/images/background/bg_icon_02.png',
+							src: '/background/bg_icon_02.png',
 							width: 132,
 							height: 124
 						},
 						{
-							src: '/images/background/bg_icon_03.png',
+							src: '/background/bg_icon_03.png',
 							width: 123,
 							height: 127
 						}
@@ -125,29 +142,63 @@
 	}
 
 	.content-box {
+		position: relative;
 		background-color: #f5f5ff;
 		border-top-left-radius: 20px;
 		border-top-right-radius: 20px;
 		box-shadow: 10px 10px 20px #ccd, -10px 10px 20px #ccd;
 		color: #222;
 		width: 100%;
-		padding-left: 1rem;
-		padding-right: 1rem;
+		padding: 0 1rem;
 		flex-grow: 1;
+	}
+
+	@media (max-width: 768px) {
+		.content-box {
+			padding: 0 0.5rem;
+		}
 	}
 
 	.content {
 		display: inline-block;
 		width: 100%;
-		padding-bottom: 2rem;
+		padding-bottom: 4rem;
 	}
 
 	nav .container {
 		display: flex;
+		flex-direction: row;
 		margin-top: 2rem;
 		margin-bottom: 1rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
+	}
+
+	footer {
+		position: absolute;
+		bottom: 10px;
+		left: 0;
+		width: 100%;
+		height: 3rem;
+	}
+
+	footer hr {
+		width: 95%;
+	}
+
+	.footer-content {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.footer-content .left {
+		margin-left: 2rem;
+	}
+
+	.footer-content .right {
+		align-self: flex-end;
+		margin-left: auto;
+		margin-right: 2rem;
 	}
 
 	.brand a {
@@ -208,7 +259,7 @@
 		width: 100%;
 		height: 100%;
 		z-index: -1;
-		background-image: url(/images/background/bg_main.jpg);
+		background-image: url(/background/bg_main.jpg);
 		background-position: 50% 0;
 		background-repeat: repeat;
 		padding: 0;
@@ -216,7 +267,7 @@
 	}
 
 	:global(body.dark) .background {
-		background-image: url(/images/background/bg_dark.jpg);
+		background-image: url(/background/bg_dark.jpg);
 	}
 
 	:global(#tsparticles) {

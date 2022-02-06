@@ -1,10 +1,10 @@
-import { getAllCharacters, getCharacterInfo } from '$lib/content/characters';
+import { getAllRaces, getRaceInfo } from '$lib/content/races';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ query }) => {
 	if (query.has('id')) {
-		const charId = query.get('id');
-		const info = await getCharacterInfo(charId);
+		const raceId = query.get('id');
+		const info = await getRaceInfo(raceId);
 		if (info) {
 			return {
 				status: 200,
@@ -15,7 +15,7 @@ export const get: RequestHandler = async ({ query }) => {
 			};
 		}
 	} else if (query.has('all') && query.get('all')) {
-		const infoObjs = await getAllCharacters(query.has('invis') && query.get('invis') == '1');
+		const infoObjs = await getAllRaces();
 		return {
 			status: 200,
 			body: JSON.stringify([...infoObjs]),

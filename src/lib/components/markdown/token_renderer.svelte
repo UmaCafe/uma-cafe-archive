@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getImageUrl } from '$lib/content';
+	import { getContentUrl } from '$lib/content/util';
 	import type { Token } from 'marked';
 	import Heading from './heading.svelte';
 	import HtmlExt from './html_ext.svelte';
@@ -85,7 +85,7 @@
 	{:else if token.type == 'html'}
 		{@html token.text}
 	{:else if token.type == 'image'}
-		<img src={getImageUrl(token.href)} title={token.title} alt={token.text} />
+		<img src={getContentUrl(`${token.href}`)} title={token.title} alt={token.text} />
 	{:else if token.type == 'link'}
 		<a href={token.href} title={token.title}><svelte:self tokens={token.tokens} /></a>
 	{:else if token.type == 'list'}
