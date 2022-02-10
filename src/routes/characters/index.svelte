@@ -62,6 +62,6 @@
 	}
 
 	a:hover .inner {
-		transform: scale(0.95);
+		transform: scale(0.96);
 	}
 </style>
