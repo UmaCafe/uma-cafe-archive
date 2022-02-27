@@ -28,7 +28,7 @@
 <style>
 	.icon-box {
 		width: 140px;
-		border: 3px solid var(--color-main);
+		border: 4px solid var(--color-main);
 		border-radius: 15px;
 		background-color: #fff;
 	}

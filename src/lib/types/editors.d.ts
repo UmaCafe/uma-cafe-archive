@@ -24,7 +24,9 @@ export type RecordMetadata<T extends Record<string, unknown>> = {
 export type ArrayMetadata<T extends Array> = {
 	type: 'array';
 	name: string;
-	entry: EditorMetadata<T[number]>;
+	entry: T[number] extends Record<string, unknown>
+		? EditorMetadata<T[number]>
+		: OtherMetadata<T[number]>;
 };
 
 type ValueFields<T> = {

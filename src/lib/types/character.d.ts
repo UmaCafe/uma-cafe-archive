@@ -44,7 +44,8 @@ export type CharacterSizes = {
 	bust?: number;
 	waist?: number;
 	hips?: number;
-	shoes?: string;
+	shoesL: number;
+	shoesR: number;
 };
 
 export type CharacterVoice = {

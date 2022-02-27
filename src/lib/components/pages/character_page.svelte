@@ -76,8 +76,12 @@
 								.sizes.hips}
 						</p>
 					{/if}
-					{#if info.bio.sizes?.shoes}
-						<p><strong>Shoe Size:</strong> {info.bio.sizes.shoes}</p>
+					{#if info.bio.sizes?.shoesL && info.bio.sizes?.shoesR}
+						<p>
+							<strong>Shoe Size:</strong>
+							{#if info.bio.sizes?.shoesL != info.bio.sizes?.shoesR}L{info.bio.sizes.shoesL}cm, R{info
+									.bio.sizes.shoesR}cm{:else}{info.bio.sizes?.shoesL}cm{/if}
+						</p>
 					{/if}
 					{#if info.bio.weight}
 						<p><strong>Weight:</strong> {info.bio.weight}</p>
