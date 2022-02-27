@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { EditorMetadata, ObjectEditorMeta } from '$lib/types/editors';
+	import SelectOther from './select_other.svelte';
 	import Uploader from './uploader.svelte';
 
 	type T = $$Generic<Record<string, unknown>>;
@@ -95,7 +96,7 @@
 					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
 				{/if}
 			</label>
-		{:else if meta.type == 'string' || meta.type == 'suggest'}
+		{:else if meta.type == 'string'}
 			<label title={meta.description}
 				><strong>{meta.name}:</strong>{#if objectToEdit?.[key] != objectOriginal?.[key]}
 					<span>*</span>
@@ -103,20 +104,12 @@
 				{/if}
 				<input
 					type="text"
-					list={meta.type == 'suggest' ? meta.name : undefined}
 					style="width: 100%"
 					placeholder={`${meta.example ?? ''}`}
 					value={ensure(objectToEdit[key], '')}
 					on:change={(ev) => (objectToEdit[key] = ev.target['value'])}
 				/></label
 			>
-			{#if meta.type == 'suggest'}
-				<datalist id={meta.name}>
-					{#each meta.suggestions as opt}
-						<option value={opt} />
-					{/each}
-				</datalist>
-			{/if}
 		{:else if meta.type == 'enum'}
 			<label title={meta.description}
 				><strong>{meta.name}:</strong>
@@ -126,6 +119,18 @@
 						<option value={choice.value}>{choice.label}</option>
 					{/each}
 				</select>{#if objectToEdit?.[key] != objectOriginal?.[key]}
+					<span>*</span>
+					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
+				{/if}</label
+			>
+		{:else if meta.type == 'suggest'}
+			<!-- svelte-ignore a11y-label-has-associated-control -->
+			<label title={meta.description}
+				><strong>{meta.name}:</strong>
+				<SelectOther
+					bind:value={objectToEdit[key]}
+					suggestions={meta.suggestions}
+				/>{#if objectToEdit?.[key] != objectOriginal?.[key]}
 					<span>*</span>
 					<button on:click={() => (objectToEdit[key] = objectOriginal?.[key])}>X</button>
 				{/if}</label

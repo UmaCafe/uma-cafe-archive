@@ -68,12 +68,8 @@ export const CHARACTER_METADATA: EditorMetadata<CharacterObject> = {
 							bust: { type: 'number', name: 'Bust' },
 							waist: { type: 'number', name: 'Waist' },
 							hips: { type: 'number', name: 'Hips' },
-							shoes: {
-								type: 'string',
-								name: 'Shoes',
-								description:
-									'From game bio. Try to keep in the format "L/R XXcm" or "L XXcm / R XXcm"'
-							}
+							shoesL: { type: 'number', name: 'Shoe Size (Left)' },
+							shoesR: { type: 'number', name: 'Shoe Size (Right)' }
 						}
 					},
 					weight: {
@@ -84,7 +80,7 @@ export const CHARACTER_METADATA: EditorMetadata<CharacterObject> = {
 					class: {
 						type: 'suggest',
 						name: 'Class',
-						suggestions: ['Upper', 'Middle']
+						suggestions: ['High School', 'Middle School']
 					},
 					dorm: {
 						type: 'suggest',
