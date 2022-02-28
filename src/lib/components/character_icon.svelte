@@ -87,5 +87,6 @@
 		font-weight: bold;
 		color: #334;
 		width: 100%;
+		word-break: break-all;
 	}
 </style>
