@@ -39,8 +39,8 @@
 	topBackgroundColor="#f5f5ff"
 	bottomBackgroundColor="#e9e9f9"
 >
-	<div slot="title">
-		<div class="title-text">
+	<div class="title-container" slot="title">
+		<div class="title-box">
 			<h1><ruby>{info.name.translated}<rt>{info.name.native}</rt></ruby></h1>
 			{#if info.bio?.nickname}<h3>"{info.bio.nickname}"</h3>{/if}
 		</div>
@@ -232,17 +232,16 @@
 		height: auto;
 	}
 
-	.title-text {
+	.title-container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 
-	.title-text h1,
-	.title-text h3 {
-		/* background-color: #f5f5ff; */
+	.title-box {
 		padding: 10px 15px;
 		border-radius: 20px;
+		text-align: center;
 	}
 
 	.desc {
