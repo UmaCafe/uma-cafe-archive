@@ -5,12 +5,19 @@
 	};
 
 	export let tabs: Array<Tab>;
-	export let color: string = '#282';
-	export let fontColor: string = '#fff';
+	export let outlineColor: string = '#282';
+	export let fontColor: string = '#000';
+	export let backgroundColor: string = '#f5f5ff';
 	let value: string = tabs?.[0]?.value ?? '';
 </script>
 
-<div class="tab-box" style="--tab-color: {color}; --font-color: {fontColor};" {...$$restProps}>
+<div
+	class="tab-box"
+	style:--outline-color={outlineColor}
+	style:--font-color={fontColor}
+	style:--background-color={backgroundColor}
+	{...$$restProps}
+>
 	<ul class="tab-list">
 		{#each tabs as tab}
 			<li class:active={tab.value === value}>
@@ -19,6 +26,7 @@
 						value = tab.value;
 					}}>{tab.label}</button
 				>
+				<div class="extra" />
 			</li>
 		{/each}
 	</ul>
@@ -30,10 +38,12 @@
 <style>
 	.tab-list {
 		display: flex;
+		position: relative;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 		align-items: stretch;
+		z-index: 1;
 	}
 
 	.tab-list li {
@@ -55,27 +65,67 @@
 	}
 
 	.tab-list button {
-		padding: 10px;
+		padding: 15px 10px 10px;
 		width: 100%;
 		height: 100%;
-		border: 1px solid black;
-		border-bottom-width: 0;
+		border: 2px solid var(--background-color);
+		border-bottom-width: 0px;
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
-		background-color: #e9e9f2;
+		color: var(--font-color);
+		background-color: #d2d2e4;
 		cursor: pointer;
 		font-weight: bold;
 	}
 
 	.tab-list li.active button {
-		color: var(--font-color);
-		background-color: var(--tab-color);
+		position: relative;
+		background-color: var(--background-color);
+	}
+
+	.tab-list li.active .extra {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		width: calc(100% - 14px);
+		height: calc(100% - 1px);
+		border: 2px solid var(--outline-color);
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		z-index: 10;
+	}
+
+	.tab-list li.active .extra::after {
+		content: '';
+		position: absolute;
+		bottom: -2px;
+		left: 0px;
+		width: calc(100%);
+		height: 4px;
+		background-color: var(--background-color);
+		z-index: 11;
 	}
 
 	.tab-content {
+		position: relative;
 		padding: 20px 15px;
-		border: 1px solid black;
+		border: 0px solid black;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
+		background-color: var(--background-color);
+	}
+
+	.tab-content::after {
+		content: '';
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		width: calc(100% - 14px);
+		height: calc(100% - 14px);
+		background-color: transparent;
+		border: 2px solid var(--outline-color);
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		pointer-events: none;
 	}
 </style>

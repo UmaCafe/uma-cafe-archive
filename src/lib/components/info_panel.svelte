@@ -1,11 +1,16 @@
 <script lang="ts">
 	export let mainColor: string = undefined;
 	export let subColor: string = undefined;
+	export let topBackgroundColor: string = undefined;
+	export let bottomBackgroundColor: string = undefined;
 </script>
 
 <div
 	class="info-panel"
-	style="--color-main: #{mainColor ?? 'ddf'}; --color-sub: #{subColor ?? 'ccd'};"
+	style:--color-main={mainColor ?? '#ddf'}
+	style:--color-sub={subColor ?? '#ccd'}
+	style:--background-color-top={topBackgroundColor ?? '#f5f5ff'}
+	style:--background-color-bottom={bottomBackgroundColor ?? '#f5f5ff'}
 >
 	<div class="title">
 		<slot name="title" />
@@ -24,9 +29,9 @@
 
 	.title {
 		position: relative;
-		text-align: center;
 		overflow: hidden;
 		padding-bottom: 20px;
+		background-color: var(--background-color-top);
 	}
 
 	.title:before {
@@ -58,5 +63,6 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		border-top: var(--color-main) 10px solid;
+		background-color: var(--background-color-bottom);
 	}
 </style>
