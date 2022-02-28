@@ -3,6 +3,7 @@
 	import Metadata from '$lib/components/metadata.svelte';
 	import CharacterPage from '$lib/components/pages/character_page.svelte';
 	import type { CharacterObject } from '$lib/types/character';
+	import { getContentUrl } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
 
 	export const load: Load = async ({ fetch, params }) => {
@@ -26,6 +27,10 @@
 	}
 </script>
 
-<Metadata title={charObj.info.name.translated} {description} image={charObj.images.icon} />
+<Metadata
+	title={charObj.info.name.translated}
+	{description}
+	image={getContentUrl(charObj.images.icon)}
+/>
 
 <CharacterPage {charObj} />
