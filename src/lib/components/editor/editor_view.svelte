@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
-	import type { EditorMetadata, ObjectEditorMeta } from '$lib/types/editors';
+	import type { ObjectEditorMeta, ObjectMeta } from '$lib/types/editors';
 	import { getChangesBetween } from '$lib/util';
-	import ObjectView from './object_view.svelte';
+	import MetaView from './object/meta_view.svelte';
 
 	export let collection: string;
 	export let document: string;
 
 	type T = $$Generic<Record<String, unknown>>;
-	export let metaObject: EditorMetadata<T>;
+	export let metaObject: ObjectMeta<T>;
 	export let object: T;
 	let objectToEdit: T = JSON.parse(JSON.stringify(object));
 	export let assetFolder: string;
@@ -47,7 +47,7 @@
 	<button on:click={() => goto('../home')}>Back</button>
 	<button on:click={() => (mode = 'preview')}>Preview</button>
 
-	<ObjectView {metaObject} objectOriginal={object} {objectToEdit} globalMeta={editorMeta} />
+	<MetaView meta={metaObject} value={objectToEdit} valueOriginal={object} globalMeta={editorMeta} />
 {:else if mode == 'preview'}
 	<h1>Previewing changes to: {collection}/{document}</h1>
 	<button on:click={() => (mode = 'edit')}>Back to Editing</button>

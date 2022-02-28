@@ -35,8 +35,8 @@
 
 <InfoPanel mainColor={info.colors.main} subColor={info.colors.sub}>
 	<div slot="title">
-		<h1>{info.name.translated}</h1>
-		<h2>{info.name.native}</h2>
+		<h1><ruby>{info.name.translated}<rt>{info.name.native}</rt></ruby></h1>
+		{#if info.bio?.nickname}<h3>"{info.bio.nickname}"</h3>{/if}
 	</div>
 	<div class="intro-box">
 		{#if info.bio?.intro}
@@ -56,6 +56,10 @@
 		<TabBox tabs={descTabs} let:value>
 			{#if info.bio}
 				<div hidden={value != 'bio'}>
+					{#if info.bio.tagline}
+						<p class="tagline">{info.bio.tagline}</p>
+						<hr class="about-hr" />
+					{/if}
 					{#if info.bio.about}
 						<p class="about">{info.bio.about}</p>
 						<hr class="about-hr" />
@@ -72,8 +76,8 @@
 					{/if}
 					{#if info.bio.sizes?.bust && info.bio.sizes?.waist && info.bio.sizes?.hips}
 						<p>
-							<strong>Sizes:</strong> B{info.bio.sizes.bust} W{info.bio.sizes.waist} H{info.bio
-								.sizes.hips}
+							<strong>Three Sizes:</strong> B{info.bio.sizes.bust} W{info.bio.sizes.waist} H{info
+								.bio.sizes.hips}
 						</p>
 					{/if}
 					{#if info.bio.sizes?.shoesL && info.bio.sizes?.shoesR}
@@ -98,9 +102,6 @@
 					{#if info.bio.weakness}
 						<p><strong>Weaknesses:</strong> {info.bio.weakness}</p>
 					{/if}
-					{#if info.bio.secret}
-						<p><strong>Secret:</strong> {info.bio.secret}</p>
-					{/if}
 					{#if info.bio.onEars}
 						<p><strong>Ears:</strong> {info.bio.onEars}</p>
 					{/if}
@@ -109,6 +110,22 @@
 					{/if}
 					{#if info.bio.onFamily}
 						<p><strong>Family:</strong> {info.bio.onFamily}</p>
+					{/if}
+					{#if info.bio.secrets?.length > 0}
+						<p><strong>Secrets:</strong></p>
+						<ul>
+							{#each info.bio.secrets as secret}
+								<li>{secret}</li>
+							{/each}
+						</ul>
+					{/if}
+					{#if info.bio.trivia?.length > 0}
+						<p><strong>Trivia:</strong></p>
+						<ul>
+							{#each info.bio.trivia as trivia}
+								<li>{trivia}</li>
+							{/each}
+						</ul>
 					{/if}
 				</div>
 			{/if}
@@ -226,6 +243,12 @@
 		font-size: large;
 	}
 
+	.tagline {
+		font-style: italic;
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
 	.about-hr {
 		margin: 25px 0px;
 	}
@@ -254,8 +277,8 @@
 	}
 
 	h1,
-	h2 {
-		margin: 8px 0;
+	h3 {
+		margin: 10px 0;
 	}
 
 	p {

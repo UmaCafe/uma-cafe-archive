@@ -3,53 +3,57 @@ export type EditorObject = {
 	key: string;
 };
 
-export type EditorMetadata<T extends Record<string, unknown>> = {
-	[P in keyof Required<T>]: T[P] extends Record<string, unknown>
-		? RecordMetadata<T[P]>
-		: T[P] extends Array<unknown>
-		? ArrayMetadata<T[P]>
-		: T[P] extends number
-		? NumberMetadata<T[P]>
-		: T[P] extends boolean
-		? BooleanMetadata<T[P]>
-		: OtherMetadata<T[P]>;
-};
+export type ObjectMeta<T> =
+	| RecordMeta<AsRecord<T>>
+	| ArrayMeta<AsArray<T>>
+	| StringMeta<AsString<T>>
+	| GenericMeta<AsNumber<T>, 'number'>
+	| GenericMeta<AsBoolean<T>, 'boolean'>;
 
-export type RecordMetadata<T extends Record<string, unknown>> = {
-	type: 'object';
-	name: string;
-	children: EditorMetadata<T>;
-};
-
-export type ArrayMetadata<T extends Array> = {
-	type: 'array';
-	name: string;
-	entry: T[number] extends Record<string, unknown>
-		? EditorMetadata<T[number]>
-		: OtherMetadata<T[number]>;
-};
-
-type ValueFields<T> = {
+export interface GenericMeta<T, TypeString> {
+	type: TypeString;
 	name: string;
 	example?: T;
 	description?: string;
+}
+
+export interface RecordMeta<T extends Record<string, U>> extends GenericMeta<T, 'object'> {
+	children: RecordKeyMeta<T>;
+}
+
+export type RecordKeyMeta<T extends Record<string, unknown>> = {
+	[P in keyof Required<T>]: ObjectMeta<T[P]>;
 };
 
-export type NumberMetadata<T extends number> = {
-	type: 'number';
-} & ValueFields<T>;
+export interface ArrayMeta<T extends U[]> extends GenericMeta<T, 'array'> {
+	entry: ObjectMeta<U>;
+	default: U;
+}
 
-export type BooleanMetadata<T extends boolean> = {
-	type: 'boolean';
-} & ValueFields<T>;
+export interface FileMeta<T extends string> extends GenericMeta<T, 'file'> {
+	mime: string;
+	defaultFileName?: string;
+}
 
-export type OtherMetadata<T> = ValueFields<T> &
-	(
-		| { type: 'string' }
-		| { type: 'file'; mime: string; defaultFileName?: string }
-		| { type: 'enum'; choices: { label: string; value: T }[] }
-		| { type: 'suggest'; suggestions: T[] }
-	);
+export interface EnumMeta<T extends string> extends GenericMeta<T, 'enum'> {
+	choices: { label: string; value: T }[];
+}
+
+export interface SuggestMeta<T extends string> extends GenericMeta<T, 'suggest'> {
+	suggestions: T[];
+}
+
+export type StringMeta<T extends string> =
+	| GenericMeta<T, 'string'>
+	| FileMeta<T>
+	| EnumMeta<T>
+	| SuggestMeta<T>;
+
+type AsRecord<T> = T extends Record<string, unknown> ? T : never;
+type AsArray<T> = T extends unknown[] ? T : never;
+type AsString<T> = T extends string ? T : never;
+type AsNumber<T> = T extends number ? T : never;
+type AsBoolean<T> = T extends boolean ? T : never;
 
 export type ObjectEditorMeta = {
 	assetFolder: string;

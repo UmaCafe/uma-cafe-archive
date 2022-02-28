@@ -2,7 +2,7 @@
 	import { session } from '$app/stores';
 	import { listContentObjects } from '$lib/client/editor';
 	import { getContentUrl } from '$lib/util';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let allowedTypes: string;
 	export let filePrefix: string = '';
@@ -11,6 +11,8 @@
 	export let fullFilePath = undefined;
 	export let success: Function = () => {};
 	export let error: Function = () => {};
+
+	const dispatch = createEventDispatcher<{ change: string }>();
 
 	let fileExists = false;
 	let mounted = false;
@@ -25,7 +27,10 @@
 			}
 			listContentObjects(fetch, $session.editor.key, fname).then((objs) => {
 				fileExists = objs.length > 0;
-				if (fileExists) fullFilePath = fname;
+				if (fileExists) {
+					fullFilePath = fname;
+					dispatch('change', fullFilePath);
+				}
 			});
 		}
 	}
@@ -49,6 +54,7 @@
 				}).then((res) => {
 					if (res.status == 200) {
 						fullFilePath = fname;
+						dispatch('change', fullFilePath);
 						success();
 					} else {
 						res.text().then((val) => error(val));
@@ -71,7 +77,13 @@
 </script>
 
 {#if editPath}
-	<input style="width: 50%" type="text" placeholder={defaultFilename} bind:value={fullFilePath} />
+	<input
+		style="width: 50%"
+		type="text"
+		placeholder={defaultFilename}
+		bind:value={fullFilePath}
+		on:change={() => dispatch('change', fullFilePath)}
+	/>
 	<button on:click={() => (editPath = false)}>Done</button>
 {:else if fullFilePath && fileExists && !reupload}
 	<div>

@@ -7,7 +7,7 @@
 	import Uploader from '$lib/components/editor/uploader.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import type { CharacterObject } from '$lib/types/character';
-	import { pagePathToDocId } from '$lib/util';
+	import { getContentUrl, pagePathToDocId } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
 	export const load: Load = async ({ fetch, session }) => {
 		const chars = await getAllCharacters(fetch, true);
@@ -123,6 +123,11 @@
 			</select>
 			<button on:click={() => deleteObject(selImg)}>Delete</button>
 		</div>
+		{#if selImg}
+			<div>
+				<a href={getContentUrl(selImg)} target="_blank">{selImg}</a>
+			</div>
+		{/if}
 		<div style="padding-top: 10px;">
 			<Uploader
 				allowedTypes="image/png,image/jpeg"
