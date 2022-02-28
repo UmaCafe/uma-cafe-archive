@@ -33,10 +33,17 @@
 	});
 </script>
 
-<InfoPanel mainColor={info.colors.main} subColor={info.colors.sub}>
+<InfoPanel
+	mainColor={'#' + info.colors.main}
+	subColor={'#' + info.colors.sub}
+	topBackgroundColor="#f5f5ff"
+	bottomBackgroundColor="#e9e9f9"
+>
 	<div slot="title">
-		<h1><ruby>{info.name.translated}<rt>{info.name.native}</rt></ruby></h1>
-		{#if info.bio?.nickname}<h3>"{info.bio.nickname}"</h3>{/if}
+		<div class="title-text">
+			<h1><ruby>{info.name.translated}<rt>{info.name.native}</rt></ruby></h1>
+			{#if info.bio?.nickname}<h3>"{info.bio.nickname}"</h3>{/if}
+		</div>
 	</div>
 	<div class="intro-box">
 		{#if info.bio?.intro}
@@ -44,7 +51,7 @@
 		{/if}
 	</div>
 	<div class="image">
-		<TabBox tabs={imageTabs} let:value>
+		<TabBox tabs={imageTabs} outlineColor={'#' + info.colors.sub} let:value>
 			{#each imageTabs as val}
 				<div hidden={value != val.value}>
 					<img src={getContentUrl(charObj.images[val.value])} alt={info.name.translated} />
@@ -53,7 +60,7 @@
 		</TabBox>
 	</div>
 	<div class="desc">
-		<TabBox tabs={descTabs} let:value>
+		<TabBox tabs={descTabs} outlineColor={'#' + info.colors.sub} let:value>
 			{#if info.bio}
 				<div hidden={value != 'bio'}>
 					{#if info.bio.tagline}
@@ -225,6 +232,19 @@
 		height: auto;
 	}
 
+	.title-text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.title-text h1,
+	.title-text h3 {
+		/* background-color: #f5f5ff; */
+		padding: 10px 15px;
+		border-radius: 20px;
+	}
+
 	.desc {
 		flex-basis: 0;
 		flex-grow: 1;
@@ -234,13 +254,19 @@
 
 	.intro-box {
 		width: 100%;
+		margin: 0px 15px;
 	}
 
 	.intro {
 		max-width: 500px;
 		margin: 0 auto;
-		padding: 20px;
 		font-size: large;
+		background-color: #f5f5ff;
+		margin: 20px auto;
+		padding: 10px 15px;
+		border: 2px solid var(--color-sub);
+		outline: 5px solid #f5f5ff;
+		border-radius: 20px;
 	}
 
 	.tagline {
