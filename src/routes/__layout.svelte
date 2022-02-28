@@ -123,19 +123,19 @@
 		box-sizing: border-box;
 	}
 
-	@media (min-width: 576px) {
+	@media (min-width: 600px) {
 		.container {
-			max-width: 500px;
+			max-width: 600px;
 		}
 	}
 
-	@media (min-width: 768px) {
+	@media (min-width: 800px) {
 		.container {
-			max-width: 720px;
+			max-width: 800px;
 		}
 	}
 
-	@media (min-width: 1024px) {
+	@media (min-width: 1000px) {
 		.container {
 			max-width: 1000px;
 		}
