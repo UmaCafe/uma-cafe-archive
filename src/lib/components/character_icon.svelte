@@ -8,6 +8,13 @@
 	if (charId) {
 		getCharacterInfo(fetch, charId).then((val) => (charInfo = val));
 	}
+
+	let nameBox: HTMLSpanElement;
+	let nameSize = 16;
+	$: while (nameSize > 1 && nameBox?.offsetHeight > 24) {
+		nameSize = nameSize - 1;
+		nameBox.style.fontSize = nameSize + 'px';
+	}
 </script>
 
 {#if charInfo}
@@ -20,7 +27,7 @@
 			<img src={getContentUrl(charInfo.images.icon)} alt="" width="140" height="140" />
 		</div>
 		<div class="capt-box">
-			<span>{charInfo.info.name.translated}</span>
+			<span bind:this={nameBox}>{charInfo.info.name.translated}</span>
 		</div>
 	</div>
 {/if}

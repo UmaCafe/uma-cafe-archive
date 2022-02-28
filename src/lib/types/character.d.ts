@@ -20,6 +20,8 @@ export type CharacterName = {
 export type CharacterBio = {
 	intro?: string;
 	about?: string;
+	tagline?: string;
+	nickname?: string;
 	birthday?: CharacterBirthday;
 	sizes?: CharacterSizes;
 	weight?: string;
@@ -27,10 +29,11 @@ export type CharacterBio = {
 	dorm?: string;
 	strength?: string;
 	weakness?: string;
-	secret?: string;
 	onEars?: string;
 	onTail?: string;
 	onFamily?: string;
+	secrets?: string[];
+	trivia?: string[];
 };
 
 export type CharacterBirthday = {
@@ -44,8 +47,8 @@ export type CharacterSizes = {
 	bust?: number;
 	waist?: number;
 	hips?: number;
-	shoesL: number;
-	shoesR: number;
+	shoesL?: number;
+	shoesR?: number;
 };
 
 export type CharacterVoice = {
