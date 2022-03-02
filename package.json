@@ -34,7 +34,9 @@
 	"dependencies": {
 		"aws-sdk": "^2.1069.0",
 		"cookie": "^0.4.2",
+		"firebase": "^9.6.7",
 		"firebase-admin": "^10.0.2",
+		"firebaseui": "^6.0.1",
 		"front-matter": "^4.0.2",
 		"marked": "^3.0.4",
 		"svelte-particles": "^1.18.2"

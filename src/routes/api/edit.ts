@@ -1,22 +1,21 @@
-import { createBasic, deleteBasic, getEditorFromKey, makeEdit } from '$lib/server/editor';
+import { createBasic, deleteBasic, getSessionFromRequest, makeEdit } from '$lib/server/editor';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const post: RequestHandler = async ({ request }) => {
-	const { editorKey, collection, document, changes } = await request.json();
-	const editor = await getEditorFromKey(editorKey);
-	if (editor) {
-		try {
-			await makeEdit(editorKey, collection, document, changes);
+	const { collection, document, changes } = await request.json();
+	const session = getSessionFromRequest(request);
+	try {
+		if (await makeEdit(session, collection, document, changes)) {
 			return {
 				status: 200,
 				body: 'Success'
 			};
-		} catch (e) {
-			return {
-				status: 500,
-				body: e
-			};
 		}
+	} catch (e) {
+		return {
+			status: 500,
+			body: e
+		};
 	}
 
 	return {
@@ -26,21 +25,20 @@ export const post: RequestHandler = async ({ request }) => {
 };
 
 export const put: RequestHandler = async ({ request }) => {
-	const { editorKey, collection, document, data } = await request.json();
-	const editor = await getEditorFromKey(editorKey);
-	if (editor) {
-		try {
-			await createBasic(editorKey, collection, document, data);
+	const { collection, document, data } = await request.json();
+	const session = getSessionFromRequest(request);
+	try {
+		if (await createBasic(session, collection, document, data)) {
 			return {
 				status: 200,
 				body: 'Success'
 			};
-		} catch (e) {
-			return {
-				status: 500,
-				body: e
-			};
 		}
+	} catch (e) {
+		return {
+			status: 500,
+			body: e
+		};
 	}
 
 	return {
@@ -50,21 +48,20 @@ export const put: RequestHandler = async ({ request }) => {
 };
 
 export const del: RequestHandler = async ({ request }) => {
-	const { editorKey, collection, document } = await request.json();
-	const editor = await getEditorFromKey(editorKey);
-	if (editor) {
-		try {
-			await deleteBasic(editorKey, collection, document);
+	const { collection, document } = await request.json();
+	const session = getSessionFromRequest(request);
+	try {
+		if (await deleteBasic(session, collection, document)) {
 			return {
 				status: 200,
 				body: 'Success'
 			};
-		} catch (e) {
-			return {
-				status: 500,
-				body: e
-			};
 		}
+	} catch (e) {
+		return {
+			status: 500,
+			body: e
+		};
 	}
 
 	return {

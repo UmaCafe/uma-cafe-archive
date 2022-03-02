@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
 	import { goto } from '$app/navigation';
-	import { session } from '$app/stores';
 	import { getPageMarkdown } from '$lib/client/pages';
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
@@ -35,7 +34,6 @@
 		fetch('/api/edit', {
 			method: 'POST',
 			body: JSON.stringify({
-				editorKey: $session.editor.key,
 				collection: 'pages',
 				document: pagePathToDocId(path),
 				changes: getChangesBetween({ md: markdown }, { md: newMarkdown })

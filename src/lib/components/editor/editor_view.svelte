@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { session } from '$app/stores';
 	import type { ObjectEditorMeta, ObjectMeta } from '$lib/types/editors';
 	import { getChangesBetween } from '$lib/util';
 	import MetaView from './object/meta_view.svelte';
@@ -24,7 +23,6 @@
 		fetch('/api/edit', {
 			method: 'POST',
 			body: JSON.stringify({
-				editorKey: $session.editor.key,
 				collection,
 				document,
 				changes: getChangesBetween(object, objectToEdit)

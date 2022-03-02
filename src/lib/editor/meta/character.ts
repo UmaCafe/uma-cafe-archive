@@ -1,6 +1,6 @@
-import type { CharacterObject } from '../types/character';
-import type { ObjectMeta } from '../types/editors';
-import { AUDIO_MIMES, IMAGE_MIMES } from '../util';
+import type { CharacterObject } from '../../types/character';
+import type { ObjectMeta } from '../../types/editors';
+import { AUDIO_MIMES, IMAGE_MIMES } from '../../util';
 
 export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 	type: 'object',

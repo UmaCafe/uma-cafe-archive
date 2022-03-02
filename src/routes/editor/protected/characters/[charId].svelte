@@ -3,7 +3,7 @@
 	import EditorView from '$lib/components/editor/editor_view.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
 	import CharacterPage from '$lib/components/pages/character_page.svelte';
-	import { CHARACTER_METADATA } from '$lib/editmeta/character';
+	import { CHARACTER_METADATA } from '$lib/editor/meta/character';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
 

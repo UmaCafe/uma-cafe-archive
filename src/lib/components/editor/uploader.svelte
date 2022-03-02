@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { session } from '$app/stores';
 	import { listContentObjects } from '$lib/client/editor';
+	import { hasPermission } from '$lib/editor/permissions';
 	import { getContentUrl } from '$lib/util';
 	import { createEventDispatcher, onMount } from 'svelte';
 
@@ -25,7 +26,7 @@
 			if (!fname && defaultFilename) {
 				fname = `${filePrefix}/${defaultFilename}`;
 			}
-			listContentObjects(fetch, $session.editor.key, fname).then((objs) => {
+			listContentObjects(fetch, fname).then((objs) => {
 				fileExists = objs.length > 0;
 				if (fileExists) {
 					fullFilePath = fname;
@@ -46,7 +47,6 @@
 				fetch(`/api/files`, {
 					method: 'PUT',
 					body: JSON.stringify({
-						editorKey: $session.editor.key,
 						name: fname,
 						data: reader.result,
 						contentType: file.type
@@ -76,42 +76,46 @@
 	let editPath = false;
 </script>
 
-{#if editPath}
-	<input
-		style="width: 50%"
-		type="text"
-		placeholder={defaultFilename}
-		bind:value={fullFilePath}
-		on:change={() => dispatch('change', fullFilePath)}
-	/>
-	<button on:click={() => (editPath = false)}>Done</button>
-{:else if fullFilePath && fileExists && !reupload}
-	<div>
-		<a href={getContentUrl(fullFilePath)} target="_blank">{fullFilePath}</a>
-	</div>
-	<button
-		on:click={() => {
-			reupload = true;
-			if (defaultFilename) uploadName = defaultFilename;
-		}}>Reupload</button
-	>
-	<button on:click={() => (editPath = true)}>Edit Manually</button>
-{:else}
-	{#if reupload}<button on:click={() => (reupload = false)}>Cancel</button>{/if}
-	<form on:submit|preventDefault={uploadObject}>
+{#if hasPermission($session.editor, 'files.list') && hasPermission($session.editor, 'files.upload')}
+	{#if editPath}
+		<input
+			style="width: 50%"
+			type="text"
+			placeholder={defaultFilename}
+			bind:value={fullFilePath}
+			on:change={() => dispatch('change', fullFilePath)}
+		/>
+		<button on:click={() => (editPath = false)}>Done</button>
+	{:else if fullFilePath && fileExists && !reupload}
 		<div>
-			<input type="file" accept={allowedTypes} required bind:files={uploadFiles} />
+			<a href={getContentUrl(fullFilePath)} target="_blank">{fullFilePath}</a>
 		</div>
-		{#if !forcedFilename}
+		<button
+			on:click={() => {
+				reupload = true;
+				if (defaultFilename) uploadName = defaultFilename;
+			}}>Reupload</button
+		>
+		<button on:click={() => (editPath = true)}>Edit Manually</button>
+	{:else}
+		{#if reupload}<button on:click={() => (reupload = false)}>Cancel</button>{/if}
+		<form on:submit|preventDefault={uploadObject}>
 			<div>
-				<label
-					>File path: <span>{filePrefix}/</span>
-					<input type="text" required placeholder={defaultFilename} bind:value={uploadName} />
-				</label>
+				<input type="file" accept={allowedTypes} required bind:files={uploadFiles} />
 			</div>
-		{:else}
-			<div>File path: {forcedFilename}</div>
-		{/if}
-		<input type="submit" value="Upload" disabled={uploading} />
-	</form>
+			{#if !forcedFilename}
+				<div>
+					<label
+						>File path: <span>{filePrefix}/</span>
+						<input type="text" required placeholder={defaultFilename} bind:value={uploadName} />
+					</label>
+				</div>
+			{:else}
+				<div>File path: {forcedFilename}</div>
+			{/if}
+			<input type="submit" value="Upload" disabled={uploading} />
+		</form>
+	{/if}
+{:else}
+	<div>You do not have permission to upload files.</div>
 {/if}
