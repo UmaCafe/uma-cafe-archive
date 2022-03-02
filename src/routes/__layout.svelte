@@ -1,13 +1,7 @@
 <script type="ts">
 	import { session } from '$app/stores';
+	import ParticleComponent from '$lib/components/particle_component.svelte';
 	import type { EditorObject } from '$lib/types/editors';
-	import { onMount } from 'svelte';
-
-	let ParticlesComponent: unknown;
-	onMount(async () => {
-		const mod = await import('svelte-particles');
-		ParticlesComponent = mod.default;
-	});
 
 	let editor: EditorObject = $session.editor;
 </script>
@@ -37,7 +31,7 @@
 				{#if editor}
 					<span>Editor: {editor.name}</span>
 					<a href="/editor/protected/home">Editor Home</a>
-					<a href="/api/auth" rel="external">Logout</a>
+					<a href="/api/auth/logout" rel="external">Logout</a>
 				{:else}
 					<a href="/editor/login">Editor Login</a>
 				{/if}
@@ -47,72 +41,7 @@
 </div>
 
 <div class="background">
-	<svelte:component
-		this={ParticlesComponent}
-		id="tsparticles"
-		options={{
-			fpsLimit: 60,
-			interactivity: {
-				detectsOn: 'canvas'
-			},
-			particles: {
-				move: {
-					enable: !0,
-					direction: 'top-right',
-					outMode: 'out',
-					speed: 1,
-					straight: !1
-				},
-				number: {
-					density: {
-						enable: !0,
-						value_area: 800
-					},
-					value: 10
-				},
-				opacity: {
-					value: 0.5
-				},
-				shape: {
-					type: 'image',
-					image: [
-						{
-							src: '/background/bg_icon_01.png',
-							width: 138,
-							height: 139
-						},
-						{
-							src: '/background/bg_icon_02.png',
-							width: 132,
-							height: 124
-						},
-						{
-							src: '/background/bg_icon_03.png',
-							width: 123,
-							height: 127
-						}
-					]
-				},
-				rotate: {
-					value: 0,
-					direction: 'clockwise',
-					animation: {
-						speed: 10,
-						random: !0,
-						enable: !0
-					}
-				},
-				size: {
-					random: {
-						enable: !0,
-						minimumValue: 20
-					},
-					value: 50
-				}
-			},
-			detectRetina: !0
-		}}
-	/>
+	<ParticleComponent />
 </div>
 
 <style>
@@ -123,19 +52,19 @@
 		box-sizing: border-box;
 	}
 
-	@media (min-width: 576px) {
+	@media (min-width: 600px) {
 		.container {
-			max-width: 500px;
+			max-width: 600px;
 		}
 	}
 
-	@media (min-width: 768px) {
+	@media (min-width: 800px) {
 		.container {
-			max-width: 720px;
+			max-width: 800px;
 		}
 	}
 
-	@media (min-width: 1024px) {
+	@media (min-width: 1000px) {
 		.container {
 			max-width: 1000px;
 		}
@@ -268,16 +197,5 @@
 
 	:global(body.dark) .background {
 		background-image: url(/background/bg_dark.jpg);
-	}
-
-	:global(#tsparticles) {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		padding: 0;
-		margin: 0;
-		z-index: -1;
 	}
 </style>

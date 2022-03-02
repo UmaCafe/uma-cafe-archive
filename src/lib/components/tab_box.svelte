@@ -98,10 +98,10 @@
 	.tab-list li.active .extra::after {
 		content: '';
 		position: absolute;
-		bottom: -2px;
+		bottom: -3px;
 		left: 0px;
 		width: calc(100%);
-		height: 4px;
+		height: 6px;
 		background-color: var(--background-color);
 		z-index: 11;
 	}

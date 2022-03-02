@@ -264,7 +264,7 @@
 		margin: 20px auto;
 		padding: 10px 15px;
 		border: 2px solid var(--color-sub);
-		outline: 5px solid #f5f5ff;
+		box-shadow: 0px 0px 0px 5px #f5f5ff;
 		border-radius: 20px;
 	}
 

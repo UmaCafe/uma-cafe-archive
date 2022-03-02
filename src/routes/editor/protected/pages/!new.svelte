@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { session } from '$app/stores';
 	import Metadata from '$lib/components/metadata.svelte';
 	import { docIdToPagePath, pagePathToDocId } from '$lib/util';
 
@@ -10,7 +9,6 @@
 		fetch(`/api/edit`, {
 			method: 'PUT',
 			body: JSON.stringify({
-				editorKey: $session.editor.key,
 				collection: 'pages',
 				document: pagePathToDocId(pagePath),
 				data: { md: baseMd }

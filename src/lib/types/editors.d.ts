@@ -1,6 +1,12 @@
 export type EditorObject = {
 	name: string;
-	key: string;
+	uid: string;
+	groups: string[];
+};
+
+export type PermissionGroup = {
+	name: string;
+	permissions: string[];
 };
 
 export type ObjectMeta<T> =
