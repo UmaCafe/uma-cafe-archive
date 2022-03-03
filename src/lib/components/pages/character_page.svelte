@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getContentUrl } from '$lib/util';
 	import type { CharacterObject } from '$lib/types/character';
-	import { MONTHS, ordinalNumber } from '$lib/util';
+	import { getContentUrl, MONTHS, ordinalNumber } from '$lib/util';
 	import InfoPanel from '../info_panel.svelte';
 	import TabBox from '../tab_box.svelte';
+	import TabPanel from '../tab_panel.svelte';
 
 	export let charObj: CharacterObject;
 	let info = charObj.info;
@@ -71,69 +71,106 @@
 						<p class="about">{info.bio.about}</p>
 						<hr class="about-hr" />
 					{/if}
-					{#if info.bio.birthday?.month && info.bio.birthday?.day}
-						<p>
-							<strong>Birthday:</strong>
-							{MONTHS[info.bio.birthday.month]}
-							{info.bio.birthday.day}{info.bio.birthday.year ? `, ${info.bio.birthday.year}` : ``}
-						</p>
-					{/if}
-					{#if info.bio.sizes?.height}
-						<p><strong>Height:</strong> {info.bio.sizes.height}cm</p>
-					{/if}
-					{#if info.bio.sizes?.bust && info.bio.sizes?.waist && info.bio.sizes?.hips}
-						<p>
-							<strong>Three Sizes:</strong> B{info.bio.sizes.bust} W{info.bio.sizes.waist} H{info
-								.bio.sizes.hips}
-						</p>
-					{/if}
-					{#if info.bio.sizes?.shoesL && info.bio.sizes?.shoesR}
-						<p>
-							<strong>Shoe Size:</strong>
-							{#if info.bio.sizes?.shoesL != info.bio.sizes?.shoesR}L{info.bio.sizes.shoesL}cm, R{info
-									.bio.sizes.shoesR}cm{:else}{info.bio.sizes?.shoesL}cm{/if}
-						</p>
-					{/if}
-					{#if info.bio.weight}
-						<p><strong>Weight:</strong> {info.bio.weight}</p>
-					{/if}
-					{#if info.bio.class}
-						<p><strong>Class:</strong> {info.bio.class}</p>
-					{/if}
-					{#if info.bio.dorm}
-						<p><strong>Dorm:</strong> {info.bio.dorm}</p>
-					{/if}
-					{#if info.bio.strength}
-						<p><strong>Strengths:</strong> {info.bio.strength}</p>
-					{/if}
-					{#if info.bio.weakness}
-						<p><strong>Weaknesses:</strong> {info.bio.weakness}</p>
-					{/if}
-					{#if info.bio.onEars}
-						<p><strong>Ears:</strong> {info.bio.onEars}</p>
-					{/if}
-					{#if info.bio.onTail}
-						<p><strong>Tail:</strong> {info.bio.onTail}</p>
-					{/if}
-					{#if info.bio.onFamily}
-						<p><strong>Family:</strong> {info.bio.onFamily}</p>
-					{/if}
-					{#if info.bio.secrets?.length > 0}
-						<p><strong>Secrets:</strong></p>
-						<ul>
-							{#each info.bio.secrets as secret}
-								<li>{secret}</li>
-							{/each}
-						</ul>
-					{/if}
-					{#if info.bio.trivia?.length > 0}
-						<p><strong>Trivia:</strong></p>
-						<ul>
-							{#each info.bio.trivia as trivia}
-								<li>{trivia}</li>
-							{/each}
-						</ul>
-					{/if}
+					<TabPanel
+						tabs={[
+							{ label: 'Profile', value: 'profile' },
+							{ label: "Trainers' Notes", value: 'notes' }
+						]}
+						panelColor={'#' + info.colors.sub}
+						let:value={bioVal}
+					>
+						{#if bioVal == 'profile'}
+							{#if info.bio.birthday?.month && info.bio.birthday?.day}
+								<p>
+									<strong>Birthday:</strong>
+									{MONTHS[info.bio.birthday.month]}
+									{info.bio.birthday.day}{info.bio.birthday.year
+										? `, ${info.bio.birthday.year}`
+										: ``}
+								</p>
+							{/if}
+							{#if info.bio.class}
+								<p><strong>Class:</strong> {info.bio.class}</p>
+							{/if}
+							{#if info.bio.dorm}
+								<p><strong>Dorm:</strong> {info.bio.dorm}</p>
+							{/if}
+							{#if info.bio.strength}
+								<p><strong>Strengths:</strong> {info.bio.strength}</p>
+							{/if}
+							{#if info.bio.weakness}
+								<p><strong>Weaknesses:</strong> {info.bio.weakness}</p>
+							{/if}
+							{#if info.bio.onEars}
+								<p><strong>Ears:</strong> {info.bio.onEars}</p>
+							{/if}
+							{#if info.bio.onTail}
+								<p><strong>Tail:</strong> {info.bio.onTail}</p>
+							{/if}
+							{#if info.bio.onFamily}
+								<p><strong>Family:</strong> {info.bio.onFamily}</p>
+							{/if}
+							{#if info.bio.secrets?.length > 0}
+								<p><strong>Secrets:</strong></p>
+								<ul>
+									{#each info.bio.secrets as secret}
+										<li>{secret}</li>
+									{/each}
+								</ul>
+							{/if}
+							{#if info.bio.trivia?.length > 0}
+								<p><strong>Trivia:</strong></p>
+								<ul>
+									{#each info.bio.trivia as trivia}
+										<li>{trivia}</li>
+									{/each}
+								</ul>
+							{/if}
+						{:else if bioVal == 'notes'}
+							{#if info.bio.sizes?.height}
+								<p><strong>Height:</strong> {info.bio.sizes.height}cm</p>
+							{/if}
+							{#if info.bio.sizes?.bust && info.bio.sizes?.waist && info.bio.sizes?.hips}
+								<p>
+									<strong>Three Sizes:</strong> B{info.bio.sizes.bust} W{info.bio.sizes.waist} H{info
+										.bio.sizes.hips}
+								</p>
+							{/if}
+							{#if info.bio.sizes?.shoesL && info.bio.sizes?.shoesR}
+								<p>
+									<strong>Shoe Size:</strong>
+									{#if info.bio.sizes?.shoesL != info.bio.sizes?.shoesR}L{info.bio.sizes.shoesL}cm,
+										R{info.bio.sizes.shoesR}cm{:else}{info.bio.sizes?.shoesL}cm{/if}
+								</p>
+							{/if}
+							{#if info.bio.weight}
+								<p><strong>Weight:</strong> {info.bio.weight}</p>
+							{/if}
+							{#if info.bio.preferredGroundType}
+								<p><strong>Preferred Ground:</strong> {info.bio.preferredGroundType}</p>
+							{/if}
+							{#if info.bio.preferredDistance}
+								<p><strong>Preferred Distance:</strong> {info.bio.preferredDistance}</p>
+							{/if}
+							{#if info.bio.preferredStrategy}
+								<p><strong>Preferred Strategy:</strong> {info.bio.preferredStrategy}</p>
+							{/if}
+							{#if info.bio.refersSelf}
+								<p>
+									<strong>Calls self:</strong>
+									{info.bio.refersSelf}
+									{#if info.bio.refersSelfJP}({info.bio.refersSelfJP}){/if}
+								</p>
+							{/if}
+							{#if info.bio.refersTrainer}
+								<p>
+									<strong>Calls Trainer:</strong>
+									{info.bio.refersTrainer}
+									{#if info.bio.refersTrainerJP}({info.bio.refersTrainerJP}){/if}
+								</p>
+							{/if}
+						{/if}
+					</TabPanel>
 				</div>
 			{/if}
 			{#if info.voice}
@@ -275,7 +312,7 @@
 	}
 
 	.about-hr {
-		margin: 25px 0px;
+		margin: 10px 0px;
 	}
 
 	.img-box img {
