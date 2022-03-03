@@ -64,6 +64,22 @@ export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 							name: 'Nickname',
 							description: 'Usually from the unique title in game'
 						},
+						refersSelf: {
+							type: 'string',
+							name: 'Calls self (English w/ Honorific)'
+						},
+						refersSelfJP: {
+							type: 'string',
+							name: 'Calls self (Japanese)'
+						},
+						refersTrainer: {
+							type: 'string',
+							name: 'Calls Trainer (English w/ Honorific)'
+						},
+						refersTrainerJP: {
+							type: 'string',
+							name: 'Calls Trainer (Japanese)'
+						},
 						birthday: {
 							type: 'object',
 							name: 'Birthday',
@@ -89,6 +105,21 @@ export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 							type: 'string',
 							name: 'Weight',
 							description: 'Weight section from game bio or website'
+						},
+						preferredGroundType: {
+							type: 'suggest',
+							name: 'Preferred Ground Type',
+							suggestions: ['Turf', 'Dirt', 'Turf/Dirt']
+						},
+						preferredDistance: {
+							type: 'suggest',
+							name: 'Preferred Distance',
+							suggestions: ['Short', 'Mile', 'Mid', 'Long', 'Short-Mid', 'Mile-Mid', 'Mid-Long']
+						},
+						preferredStrategy: {
+							type: 'suggest',
+							name: 'Preferred Strategy',
+							suggestions: ['Escape', 'Leader', 'Betweener', 'Chaser']
 						},
 						class: {
 							type: 'suggest',
@@ -180,6 +211,44 @@ export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 							name: 'Wikipedia URL (JP)',
 							example: 'https://ja.wikipedia.org/wiki/%E8%97%A4%E4%BA%95%E3%82%86%E3%81%8D%E3%82%88'
 						},
+						socialMedia: {
+							type: 'array',
+							name: 'Social Media',
+							default: {
+								name: '',
+								url: ''
+							},
+							entry: {
+								type: 'object',
+								name: 'Link',
+								children: {
+									name: { type: 'string', name: 'Name' },
+									url: { type: 'string', name: 'URL' }
+								}
+							}
+						},
+						otherRoles: {
+							type: 'array',
+							name: 'Other Roles',
+							default: {
+								characterName: '',
+								mediaName: ''
+							},
+							entry: {
+								type: 'object',
+								name: 'Role',
+								children: {
+									characterName: {
+										type: 'string',
+										name: 'Character Name'
+									},
+									mediaName: {
+										type: 'string',
+										name: 'Media Name'
+									}
+								}
+							}
+						},
 						voiceSample: {
 							type: 'file',
 							name: 'Voice Sample File',
@@ -211,7 +280,11 @@ export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 						notableRaces: {
 							type: 'array',
 							name: 'Notable Races',
-							default: {},
+							default: {
+								name: '',
+								place: 1,
+								year: 1000
+							},
 							entry: {
 								type: 'object',
 								name: 'Race',

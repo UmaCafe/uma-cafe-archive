@@ -22,9 +22,16 @@ export type CharacterBio = {
 	about?: string;
 	tagline?: string;
 	nickname?: string;
+	refersSelf?: string;
+	refersSelfJP?: string;
+	refersTrainer?: string;
+	refersTrainerJP?: string;
 	birthday?: CharacterBirthday;
 	sizes?: CharacterSizes;
 	weight?: string;
+	preferredGroundType: string;
+	preferredDistance: string;
+	preferredStrategy: string;
 	class?: string;
 	dorm?: string;
 	strength?: string;
@@ -59,6 +66,18 @@ export type CharacterVoice = {
 	wikipediaUrlEN?: string;
 	anilistUrl?: string;
 	malUrl?: string;
+	socialMedia?: SeiyuuSocialMedia[];
+	otherRoles?: SeiyuuOtherRoles[];
+};
+
+export type SeiyuuSocialMedia = {
+	name: string;
+	url: string;
+};
+
+export type SeiyuuOtherRoles = {
+	characterName: string;
+	mediaName: string;
 };
 
 export type CharacterCounterpart = {

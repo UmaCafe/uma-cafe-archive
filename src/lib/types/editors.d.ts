@@ -32,8 +32,8 @@ export type RecordKeyMeta<T extends Record<string, unknown>> = {
 };
 
 export interface ArrayMeta<T extends U[]> extends GenericMeta<T, 'array'> {
-	entry: ObjectMeta<U>;
-	default: U;
+	entry: ObjectMeta<T[number]>;
+	default: T[number];
 }
 
 export interface FileMeta<T extends string> extends GenericMeta<T, 'file'> {

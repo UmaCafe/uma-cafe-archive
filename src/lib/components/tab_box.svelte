@@ -65,7 +65,7 @@
 	}
 
 	.tab-list button {
-		padding: 15px 10px 10px;
+		padding: 10px 8px 8px;
 		width: 100%;
 		height: 100%;
 		border: 2px solid var(--background-color);

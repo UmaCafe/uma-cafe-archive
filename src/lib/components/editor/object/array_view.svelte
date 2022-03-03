@@ -19,13 +19,23 @@
 		value = value;
 		dispatch('change', value);
 	}
+
+	function addDefault() {
+		value.push(
+			Array.isArray(meta.default)
+				? (meta.default.slice() as ArrayContent)
+				: typeof meta.default == 'object'
+				? Object.assign({}, meta.default)
+				: meta.default
+		);
+		update();
+	}
 </script>
 
 <h3>{meta.name}</h3>
 <button
 	on:click={() => {
-		value.push(meta.default);
-		update();
+		addDefault();
 	}}>Add</button
 >
 {#if (valueOriginal && value.length != valueOriginal.length) || (value.length > 0 && !valueOriginal)}
@@ -47,7 +57,7 @@
 		<MetaView
 			meta={meta.entry}
 			value={obj}
-			valueOriginal={valueOriginal?.[i]}
+			valueOriginal={valueOriginal?.[i] ?? meta.default}
 			{globalMeta}
 			on:change={(ev) => {
 				value[i] = ev.detail;
