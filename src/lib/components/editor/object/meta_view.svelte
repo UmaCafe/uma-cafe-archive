@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ObjectEditorMeta, ObjectMeta } from '$lib/types/editors';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import Uploader from '../uploader.svelte';
 	import ArrayView from './array_view.svelte';
 	import ObjectView from './object_view.svelte';
@@ -8,8 +8,8 @@
 
 	type T = $$Generic<unknown>;
 	export let meta: ObjectMeta<T>;
-	export let value: T;
-	export let valueOriginal: T;
+	export let value: T = undefined;
+	export let valueOriginal: T = undefined;
 	export let globalMeta: ObjectEditorMeta;
 
 	if (typeof value == 'undefined' && (meta.type == 'object' || meta.type == 'array')) {
@@ -27,6 +27,15 @@
 		value = value;
 		dispatch('change', value);
 	}
+
+	let dynamicChoices = [];
+	onMount(() => {
+		if (meta.type == 'dynamic') {
+			meta.getChoices(fetch).then((choices) => {
+				dynamicChoices = choices;
+			});
+		}
+	});
 </script>
 
 {#if meta.type == 'array'}
@@ -123,6 +132,24 @@
 		<select bind:value on:change={() => update()}>
 			<option value={undefined} />
 			{#each meta.choices as choice}
+				<option value={choice.value}>{choice.label}</option>
+			{/each}
+		</select>{#if value != valueOriginal}
+			<span>*</span>
+			<button
+				on:click={() => {
+					value = valueOriginal;
+					update();
+				}}>X</button
+			>
+		{/if}</label
+	>
+{:else if meta.type == 'dynamic'}
+	<label title={meta.description}
+		><strong>{meta.name}:</strong>
+		<select bind:value on:change={() => update()}>
+			<option value={undefined} />
+			{#each dynamicChoices as choice}
 				<option value={choice.value}>{choice.label}</option>
 			{/each}
 		</select>{#if value != valueOriginal}

@@ -62,6 +62,7 @@ export function getChangesBetween<T>(
 }
 
 export function getContentUrl(fileName: string): string {
+	if (typeof fileName == 'undefined') return undefined;
 	if (fileName.startsWith('/')) fileName = fileName.substring(1);
 	return `https://static.uma.cafe/${fileName}`;
 }

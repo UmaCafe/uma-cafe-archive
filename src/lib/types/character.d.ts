@@ -34,6 +34,7 @@ export type CharacterBio = {
 	preferredStrategy: string;
 	class?: string;
 	dorm?: string;
+	roommate?: string;
 	strength?: string;
 	weakness?: string;
 	onEars?: string;

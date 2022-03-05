@@ -1,3 +1,5 @@
+import type { Fetch } from './fetch';
+
 export type EditorObject = {
 	name: string;
 	uid: string;
@@ -42,18 +44,28 @@ export interface FileMeta<T extends string> extends GenericMeta<T, 'file'> {
 }
 
 export interface EnumMeta<T extends string> extends GenericMeta<T, 'enum'> {
-	choices: { label: string; value: T }[];
+	choices: LabelValuePair<T>[];
 }
 
 export interface SuggestMeta<T extends string> extends GenericMeta<T, 'suggest'> {
 	suggestions: T[];
 }
 
+export interface DynamicMeta<T extends string> extends GenericMeta<T, 'dynamic'> {
+	getChoices: (fetch: Fetch) => Promise<LabelValuePair<T>[]>;
+}
+
+export type LabelValuePair<T> = {
+	label: string;
+	value: T;
+};
+
 export type StringMeta<T extends string> =
 	| GenericMeta<T, 'string'>
 	| FileMeta<T>
 	| EnumMeta<T>
-	| SuggestMeta<T>;
+	| SuggestMeta<T>
+	| DynamicMeta<T>;
 
 type AsRecord<T> = T extends Record<string, unknown> ? T : never;
 type AsArray<T> = T extends unknown[] ? T : never;
