@@ -1,11 +1,12 @@
 <script lang="ts" context="module">
 	import { getCharacterInfo } from '$lib/client/characters';
 	import EditorView from '$lib/components/editor/editor_view.svelte';
+	import PageRenderer from '$lib/components/editor/page_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import CharacterPage from '$lib/components/pages/character_page.svelte';
 	import { CHARACTER_METADATA } from '$lib/editor/meta/character';
 	import type { CharacterObject } from '$lib/types/character';
 	import type { Load } from '@sveltejs/kit';
+	import CharacterPage, { load as charLoad } from '../../../characters/[charId].svelte';
 
 	export const load: Load = async ({ fetch, params }) => {
 		let charId = params.charId;
@@ -37,6 +38,11 @@
 	let:previewObject
 >
 	{#if previewObject}
-		<CharacterPage charObj={previewObject} />
+		<PageRenderer
+			component={CharacterPage}
+			load={charLoad}
+			params={{ charId: charId }}
+			props={{ charObj: previewObject }}
+		/>
 	{/if}
 </EditorView>
