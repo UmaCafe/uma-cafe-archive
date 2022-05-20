@@ -2,23 +2,25 @@
 	import { getRaceInfo } from '$lib/client/races';
 	import type { RaceObject } from '$lib/types/race';
 
-	export let raceId: string | null = null;
-	export let raceInfo: RaceObject | null = null;
+	export let raceId: string | undefined = undefined;
+	export let raceInfo: RaceObject | undefined = undefined;
 	if (raceId) {
 		getRaceInfo(fetch, raceId).then((val) => (raceInfo = val));
 	}
 
 	function trackString() {
-		const trackInfo = raceInfo.info.trackInfo;
-		const trackType = {
-			turf: 'Turf',
-			dirt: 'Dirt'
-		}[trackInfo.trackType];
-		const direction = {
-			cw: 'CW',
-			ccw: 'CCW'
-		}[trackInfo.direction];
-		return `${trackInfo.trackName} - ${trackInfo.distance}m (${trackType}, ${direction})`;
+		const trackInfo = raceInfo?.info.trackInfo;
+		if (trackInfo) {
+			const trackType = {
+				turf: 'Turf',
+				dirt: 'Dirt'
+			}[trackInfo.trackType];
+			const direction = {
+				cw: 'CW',
+				ccw: 'CCW'
+			}[trackInfo.direction];
+			return `${trackInfo.trackName} - ${trackInfo.distance}m (${trackType}, ${direction})`;
+		}
 	}
 </script>
 

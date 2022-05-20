@@ -38,7 +38,7 @@ export async function getObject(fileName: string): Promise<AWS.S3.GetObjectOutpu
 export async function listObjects(folderName: string): Promise<AWS.S3.ObjectList> {
 	const s3 = createClient();
 	const res = await s3.listObjects({ Bucket: CONTENT_BUCKET, Prefix: folderName }).promise();
-	return res.Contents;
+	return res.Contents ?? [];
 }
 
 export async function deleteObject(fileName: string): Promise<AWS.S3.DeleteObjectOutput> {

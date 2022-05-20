@@ -10,14 +10,13 @@ export async function listPagePaths(): Promise<string[]> {
 	});
 }
 
-export async function getPageMarkdown(pagePath: string): Promise<string | null> {
+export async function getPageMarkdown(pagePath: string): Promise<string | undefined> {
 	const pages = await pageDb();
-	if (pagePath == 'index') return null;
+	if (pagePath == 'index') return;
 	const docId = pagePathToDocId(pagePath);
 	const pageData = await pages.doc(docId).get();
 	if (pageData.exists) {
 		const pageObj = pageData.data();
-		return pageObj.md.replace(/\\n/g, '\n');
+		return pageObj?.md.replace(/\\n/g, '\n');
 	}
-	return null;
 }

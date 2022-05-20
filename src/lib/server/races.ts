@@ -18,12 +18,11 @@ export async function getAllRaces(): Promise<Map<string, RaceObject>> {
  * @param raceId The reference ID of the race
  * @returns Race info object for the race, or null if it doesn't exist
  */
-export async function getRaceInfo(raceId: string): Promise<RaceObject | null> {
+export async function getRaceInfo(raceId: string): Promise<RaceObject | undefined> {
 	const races = await raceDb();
 	const raceDoc = await races.doc(raceId).get();
 	if (raceDoc.exists) {
 		const raceObj = raceDoc.data();
 		return raceObj;
 	}
-	return null;
 }

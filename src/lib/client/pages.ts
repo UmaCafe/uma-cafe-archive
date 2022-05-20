@@ -8,10 +8,9 @@ export async function listPagePaths(fetch: Fetch): Promise<string[]> {
 	return [];
 }
 
-export async function getPageMarkdown(fetch: Fetch, pagePath: string): Promise<string | null> {
+export async function getPageMarkdown(fetch: Fetch, pagePath: string): Promise<string | undefined> {
 	const resp = await fetch(`/api/content?page=${pagePath}`);
 	if (resp.status == 200) {
 		return await resp.text();
 	}
-	return null;
 }

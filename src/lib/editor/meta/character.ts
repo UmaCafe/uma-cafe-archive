@@ -1,6 +1,6 @@
 import { getAllCharacters } from '$lib/client/characters';
 import type { CharacterObject } from '../../types/character';
-import type { ObjectMeta } from '../../types/editors';
+import type { LabelValuePair, ObjectMeta } from '../../types/editors';
 import { AUDIO_MIMES, IMAGE_MIMES } from '../../util';
 
 export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
@@ -136,7 +136,7 @@ export const CHARACTER_METADATA: ObjectMeta<CharacterObject> = {
 							type: 'dynamic',
 							name: 'Roommate',
 							async getChoices(fetch) {
-								const choices = [];
+								const choices: LabelValuePair<string>[] = [];
 								(await getAllCharacters(fetch)).forEach((val, key) =>
 									choices.push({ label: val.info.name.translated, value: key })
 								);

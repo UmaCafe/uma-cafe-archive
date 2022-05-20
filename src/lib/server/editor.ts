@@ -7,35 +7,33 @@ import { getUserIdFromSession } from './external/firebaseAuth';
 import { editorsDb, getCollection } from './external/firestore';
 import { listObjects } from './external/s3';
 
-export async function authEditorWithRequest(request: Request): Promise<EditorObject | null> {
+export async function authEditorWithRequest(request: Request): Promise<EditorObject | undefined> {
 	const session = getSessionFromRequest(request);
 	if (session) return authEditorWithSession(session);
-	return null;
 }
 
-export function getSessionFromRequest(request: Request): string | null {
+export function getSessionFromRequest(request: Request): string | undefined {
 	if (request.headers.has('cookie')) {
-		const cookies = cookie.parse(request.headers.get('cookie'));
+		const cookies = cookie.parse(request.headers.get('cookie') ?? '');
 
 		if (cookies['session']) {
 			return cookies['session'];
 		}
 	}
-	return null;
 }
 
-export async function authEditorWithSession(session: string): Promise<EditorObject | null> {
-	if (!session) return null;
+export async function authEditorWithSession(session: string): Promise<EditorObject | undefined> {
+	if (!session) return;
 	const uid = await getUserIdFromSession(session);
 	if (uid) return await getEditorFromUid(uid);
 }
 
-export async function getEditorFromUid(uid: string): Promise<EditorObject | null> {
+export async function getEditorFromUid(uid: string): Promise<EditorObject | undefined> {
 	const editors = await editorsDb();
 	const obj = await editors.where('uid', '==', uid).get();
-	if (obj.empty) return null;
+	if (obj.empty) return;
 	const doc = obj.docs[0];
-	if (!doc.exists) return null;
+	if (!doc.exists) return;
 	return doc.data();
 }
 
@@ -46,9 +44,9 @@ export async function makeEdit(
 	changes: ChangeInstance[]
 ): Promise<boolean> {
 	const editor = await authEditorWithSession(session);
-	if (hasPermission(editor, 'editor.edit.' + collection)) {
+	if (editor && hasPermission(editor, 'editor.edit.' + collection)) {
 		const docRef = (await getCollection(collection)).doc(doc);
-		const data = {};
+		const data: Record<string, unknown> = {};
 		for (const change of changes) {
 			data[change.key] = change.after;
 		}
@@ -92,14 +90,16 @@ export async function deleteBasic(
 	return false;
 }
 
-export async function listContentObjects(folder: string): Promise<{ name: string }[]> {
+export type ListedContentObject = { name: string };
+export async function listContentObjects(folder: string): Promise<ListedContentObject[]> {
 	const objects = await listObjects(folder);
 	return objects
 		.filter((obj) => {
+			if (!obj || !obj.Key) return false;
 			const path = obj.Key.split('/');
 			return path[path.length - 1] != '.bzEmpty'; // ignore folder keep files
 		})
 		.map((obj) => {
-			return { name: obj.Key };
+			return { name: obj.Key } as ListedContentObject;
 		});
 }

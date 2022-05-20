@@ -7,5 +7,8 @@ declare global {
 		interface Session {
 			editor?: EditorObject;
 		}
+		interface Locals {
+			editor?: EditorObject;
+		}
 	}
 }

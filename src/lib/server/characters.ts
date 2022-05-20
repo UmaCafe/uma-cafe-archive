@@ -6,13 +6,12 @@ import type { QueryDocumentSnapshot } from 'firebase-admin/firestore';
  * @param charId The reference ID of the character
  * @returns Character info object for the character, or null if it doesn't exist
  */
-export async function getCharacterInfo(charId: string): Promise<CharacterObject | null> {
+export async function getCharacterInfo(charId: string): Promise<CharacterObject | undefined> {
 	const chars = await characterDb();
 	const charData = await chars.doc(charId).get();
 	if (charData.exists) {
 		return charData.data();
 	}
-	return null;
 }
 
 /**

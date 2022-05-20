@@ -7,7 +7,7 @@ export const CHAR_DATA = writable(new Map<string, CharacterObject>());
 export async function getCharacterInfo(
 	fetch: Fetch,
 	charId: string
-): Promise<CharacterObject | null> {
+): Promise<CharacterObject | undefined> {
 	const charData = get(CHAR_DATA);
 	if (charData.has(charId)) {
 		return charData.get(charId);
@@ -35,4 +35,5 @@ export async function getAllCharacters(
 		CHAR_DATA.set(map);
 		return map;
 	}
+	return new Map();
 }

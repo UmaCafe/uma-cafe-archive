@@ -16,7 +16,7 @@ const PERMISSION_GROUPS: { [k: string]: PermissionGroup } = {
 	}
 };
 
-export function hasPermission(editor: EditorObject | null, permission: string): boolean {
+export function hasPermission(editor: EditorObject | undefined, permission: string): boolean {
 	if (!editor) return false;
 	for (const groupId of editor.groups ?? []) {
 		if (hasPermissionInGroup(groupId, permission)) return true;

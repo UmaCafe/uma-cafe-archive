@@ -15,20 +15,20 @@ export function ordinalNumber(num: number): string {
 	return `${num}${suff}`;
 }
 
-export const MONTHS = {
-	1: 'Jan',
-	2: 'Feb',
-	3: 'Mar',
-	4: 'Apr',
-	5: 'May',
-	6: 'Jun',
-	7: 'Jul',
-	8: 'Aug',
-	9: 'Sep',
-	10: 'Oct',
-	11: 'Nov',
-	12: 'Dec'
-};
+export const MONTHS = new Map<number, string>([
+	[1, 'Jan'],
+	[2, 'Feb'],
+	[3, 'Mar'],
+	[4, 'Apr'],
+	[5, 'May'],
+	[6, 'Jun'],
+	[7, 'Jul'],
+	[8, 'Aug'],
+	[9, 'Sep'],
+	[10, 'Oct'],
+	[11, 'Nov'],
+	[12, 'Dec']
+]);
 
 export type ChangeInstance = { key: string; before: unknown; after: unknown };
 
@@ -38,9 +38,9 @@ export function getChangesBetween<T>(
 	keyBuild = ''
 ): Array<ChangeInstance> {
 	let changes: Array<ChangeInstance> = [];
-	let allKeys = [];
-	if (original) allKeys = allKeys.concat(Object.keys(original));
-	if (modified) allKeys = allKeys.concat(Object.keys(modified));
+	let allKeys: (keyof T)[] = [];
+	if (original) allKeys = allKeys.concat(Object.keys(original) as (keyof T)[]);
+	if (modified) allKeys = allKeys.concat(Object.keys(modified) as (keyof T)[]);
 	allKeys = [...new Set(allKeys)];
 	for (const key of allKeys) {
 		const originalVal = original?.[key];
@@ -62,7 +62,6 @@ export function getChangesBetween<T>(
 }
 
 export function getContentUrl(fileName: string): string {
-	if (typeof fileName == 'undefined') return undefined;
 	if (fileName.startsWith('/')) fileName = fileName.substring(1);
 	return `https://static.uma.cafe/${fileName}`;
 }

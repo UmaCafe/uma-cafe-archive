@@ -7,13 +7,17 @@
 
 	export let allowedTypes: string;
 	export let filePrefix: string = '';
-	export let forcedFilename: string = undefined;
-	export let defaultFilename: string = undefined;
-	export let fullFilePath = undefined;
+	export let forcedFilename: string | undefined = undefined;
+	export let defaultFilename: string | undefined = undefined;
+	export let fullFilePath: unknown = '';
 	export let success: Function = () => {};
 	export let error: Function = () => {};
 
 	const dispatch = createEventDispatcher<{ change: string }>();
+
+	function ensure<T>(obj: unknown, _as: T): T {
+		return obj as T;
+	}
 
 	let fileExists = false;
 	let mounted = false;
@@ -22,7 +26,7 @@
 	});
 	$: {
 		if (mounted) {
-			let fname = fullFilePath;
+			let fname = fullFilePath as string;
 			if (!fname && defaultFilename) {
 				fname = `${filePrefix}/${defaultFilename}`;
 			}
@@ -30,7 +34,7 @@
 				fileExists = objs.length > 0;
 				if (fileExists) {
 					fullFilePath = fname;
-					dispatch('change', fullFilePath);
+					dispatch('change', fullFilePath as string);
 				}
 			});
 		}
@@ -54,7 +58,7 @@
 				}).then((res) => {
 					if (res.status == 200) {
 						fullFilePath = fname;
-						dispatch('change', fullFilePath);
+						dispatch('change', fullFilePath as string);
 						success();
 					} else {
 						res.text().then((val) => error(val));
@@ -83,12 +87,12 @@
 			type="text"
 			placeholder={defaultFilename}
 			bind:value={fullFilePath}
-			on:change={() => dispatch('change', fullFilePath)}
+			on:change={() => dispatch('change', ensure(fullFilePath, ''))}
 		/>
 		<button on:click={() => (editPath = false)}>Done</button>
 	{:else if fullFilePath && fileExists && !reupload}
 		<div>
-			<a href={getContentUrl(fullFilePath)} target="_blank">{fullFilePath}</a>
+			<a href={getContentUrl(ensure(fullFilePath, ''))} target="_blank">{fullFilePath}</a>
 		</div>
 		<button
 			on:click={() => {

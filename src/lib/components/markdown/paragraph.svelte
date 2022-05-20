@@ -1,5 +1,5 @@
 <script type="ts">
-	export let pre: boolean;
+	export let pre: boolean | undefined = undefined;
 </script>
 
 {#if pre}

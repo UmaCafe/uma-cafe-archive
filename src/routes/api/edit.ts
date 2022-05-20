@@ -5,7 +5,7 @@ export const post: RequestHandler = async ({ request }) => {
 	const { collection, document, changes } = await request.json();
 	const session = getSessionFromRequest(request);
 	try {
-		if (await makeEdit(session, collection, document, changes)) {
+		if (session && await makeEdit(session, collection, document, changes)) {
 			return {
 				status: 200,
 				body: 'Success'
@@ -28,7 +28,7 @@ export const put: RequestHandler = async ({ request }) => {
 	const { collection, document, data } = await request.json();
 	const session = getSessionFromRequest(request);
 	try {
-		if (await createBasic(session, collection, document, data)) {
+		if (session && await createBasic(session, collection, document, data)) {
 			return {
 				status: 200,
 				body: 'Success'
@@ -51,7 +51,7 @@ export const del: RequestHandler = async ({ request }) => {
 	const { collection, document } = await request.json();
 	const session = getSessionFromRequest(request);
 	try {
-		if (await deleteBasic(session, collection, document)) {
+		if (session && await deleteBasic(session, collection, document)) {
 			return {
 				status: 200,
 				body: 'Success'

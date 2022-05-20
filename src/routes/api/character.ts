@@ -3,7 +3,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ url }) => {
 	if (url.searchParams.has('id')) {
-		const charId = url.searchParams.get('id');
+		const charId = url.searchParams.get('id') as string;
 		const info = await getCharacterInfo(charId);
 		if (info) {
 			return {

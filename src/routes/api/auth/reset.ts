@@ -7,13 +7,15 @@ export const get: RequestHandler = async ({ request }) => {
 	if (editor) {
 		const auth = getAuth();
 		const user = await auth.getUser(editor.uid);
-		const link = await auth.generatePasswordResetLink(user.email);
-		return {
-			status: 302,
-			headers: {
-				Location: link
-			}
-		};
+		if (user.email) {
+			const link = await auth.generatePasswordResetLink(user.email);
+			return {
+				status: 302,
+				headers: {
+					Location: link
+				}
+			};
+		}
 	}
 
 	return {

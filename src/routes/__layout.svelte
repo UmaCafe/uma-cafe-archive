@@ -3,7 +3,7 @@
 	import ParticleComponent from '$lib/components/particle_component.svelte';
 	import type { EditorObject } from '$lib/types/editors';
 
-	let editor: EditorObject = $session.editor;
+	let editor: EditorObject | undefined = $session.editor;
 </script>
 
 <nav>

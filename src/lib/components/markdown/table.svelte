@@ -4,7 +4,7 @@
 
 	export let header: Array<Tokens.TableCell>;
 	export let rows: Array<Array<Tokens.TableCell>>;
-	export let align: Array<'left' | 'center' | 'right'>;
+	export let align: Array<'left' | 'center' | 'right' | null>;
 </script>
 
 <table>

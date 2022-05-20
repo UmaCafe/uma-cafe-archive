@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ObjectEditorMeta, ObjectMeta } from '$lib/types/editors';
+	import type { ArrayMeta, LabelValuePair, ObjectEditorMeta, ObjectMeta } from '$lib/types/editors';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import Uploader from '../uploader.svelte';
 	import ArrayView from './array_view.svelte';
@@ -8,8 +8,8 @@
 
 	type T = $$Generic<unknown>;
 	export let meta: ObjectMeta<T>;
-	export let value: T = undefined;
-	export let valueOriginal: T = undefined;
+	export let value: T | undefined = undefined;
+	export let valueOriginal: T | undefined = undefined;
 	export let globalMeta: ObjectEditorMeta;
 
 	if (typeof value == 'undefined' && (meta.type == 'object' || meta.type == 'array')) {
@@ -20,6 +20,8 @@
 	function ensure<T>(obj: unknown, _as: T): T {
 		return obj as T;
 	}
+	let _TArr: T[] = [];
+	let _ArrMeta: ArrayMeta<unknown[]>;
 
 	const dispatch = createEventDispatcher<{ change: T }>();
 
@@ -28,7 +30,7 @@
 		dispatch('change', value);
 	}
 
-	let dynamicChoices = [];
+	let dynamicChoices: LabelValuePair<T>[] = [];
 	onMount(() => {
 		if (meta.type == 'dynamic') {
 			meta.getChoices(fetch).then((choices) => {
@@ -40,9 +42,9 @@
 
 {#if meta.type == 'array'}
 	<ArrayView
-		{meta}
-		valueOriginal={ensure(valueOriginal, [])}
-		value={ensure(value, [])}
+		meta={ensure(meta, _ArrMeta)}
+		valueOriginal={ensure(valueOriginal, _TArr)}
+		value={ensure(value, _TArr)}
 		on:change={(ev) => {
 			value = ensure(ev.detail, value);
 			update();
@@ -70,7 +72,7 @@
 				placeholder={`${meta.example ?? ''}`}
 				value={ensure(value, 0)}
 				on:change={(ev) => {
-					value = ev.target['value'];
+					value = ensure(ev.currentTarget.value, value);
 					update();
 				}}
 			/></label
@@ -91,7 +93,7 @@
 			type="checkbox"
 			checked={ensure(value, true)}
 			on:change={(ev) => {
-				value = ev.target['checked'];
+				value = ensure(ev.currentTarget.checked, value);
 				update();
 			}}
 		/>{#if value != valueOriginal}
@@ -121,7 +123,7 @@
 			placeholder={`${meta.example ?? ''}`}
 			value={ensure(value, '') ?? ''}
 			on:change={(ev) => {
-				value = ev.target['value'];
+				value = ensure(ev.currentTarget.value, value);
 				update();
 			}}
 		/></label

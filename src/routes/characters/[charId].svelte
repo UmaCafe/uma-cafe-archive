@@ -4,7 +4,8 @@
 	import Metadata from '$lib/components/metadata.svelte';
 	import TabBox from '$lib/components/tab_box.svelte';
 	import TabPanel from '$lib/components/tab_panel.svelte';
-	import type { CharacterObject } from '$lib/types/character';
+	import type { CharacterImages, CharacterObject } from '$lib/types/character';
+	import type { LabelValuePair } from '$lib/types/editors';
 	import { getContentUrl, MONTHS, ordinalNumber } from '$lib/util';
 	import type { Load } from '@sveltejs/kit';
 
@@ -13,9 +14,9 @@
 		const charObj = await getCharacterInfo(fetch, charId);
 		if (charObj) {
 			let roommateName: string;
-			if (charObj.info.bio.roommate) {
+			if (charObj.info.bio?.roommate) {
 				let roommate = await getCharacterInfo(fetch, charObj.info.bio.roommate);
-				roommateName = roommate.info.name.translated;
+				roommateName = roommate?.info.name.translated ?? charObj.info.bio.roommate;
 			}
 			return {
 				props: {
@@ -42,7 +43,7 @@
 		description = charObj.info.bio.about;
 	}
 
-	let imageTabs = [
+	let imageTabs: LabelValuePair<keyof CharacterImages>[] = [
 		{ label: 'Uniform', value: 'seifuku' },
 		{ label: 'Racing Outfit (Game)', value: 'shoubufuku' },
 		{ label: 'Racing Outfit (Original)', value: 'proto' },
@@ -63,7 +64,7 @@
 	$: descTabs = descTabs.filter((v) => {
 		if (v.value == 'bio') return info.bio;
 		if (v.value == 'voice') return info.voice?.nativeName && info.voice?.romanizedName;
-		if (v.value == 'counterpart') return info.counterpart.sex;
+		if (v.value == 'counterpart') return info.counterpart?.sex;
 	});
 </script>
 
@@ -74,8 +75,8 @@
 />
 
 <InfoPanel
-	mainColor={'#' + info.colors.main}
-	subColor={'#' + info.colors.sub}
+	mainColor={'#' + info.colors?.main}
+	subColor={'#' + info.colors?.sub}
 	topBackgroundColor="#f5f5ff"
 	bottomBackgroundColor="#e9e9f9"
 >
@@ -91,16 +92,16 @@
 		{/if}
 	</div>
 	<div class="image">
-		<TabBox tabs={imageTabs} outlineColor={'#' + info.colors.sub} let:value>
+		<TabBox tabs={imageTabs} outlineColor={'#' + info.colors?.sub} let:value>
 			{#each imageTabs as val}
 				<div hidden={value != val.value}>
-					<img src={getContentUrl(charObj.images[val.value])} alt={info.name.translated} />
+					<img src={getContentUrl(charObj.images[val.value] ?? '')} alt={info.name.translated} />
 				</div>
 			{/each}
 		</TabBox>
 	</div>
 	<div class="desc">
-		<TabBox tabs={descTabs} outlineColor={'#' + info.colors.sub} let:value>
+		<TabBox tabs={descTabs} outlineColor={'#' + info.colors?.sub} let:value>
 			{#if info.bio}
 				<div hidden={value != 'bio'}>
 					{#if info.bio.tagline}
@@ -116,14 +117,14 @@
 							{ label: 'Profile', value: 'profile' },
 							{ label: "Trainers' Notes", value: 'notes' }
 						]}
-						panelColor={'#' + info.colors.sub}
+						panelColor={'#' + info.colors?.sub}
 						let:value={bioVal}
 					>
 						{#if bioVal == 'profile'}
 							{#if info.bio.birthday?.month && info.bio.birthday?.day}
 								<p>
 									<strong>Birthday:</strong>
-									{MONTHS[info.bio.birthday.month]}
+									{MONTHS.get(info.bio.birthday.month) ?? ''}
 									{info.bio.birthday.day}{info.bio.birthday.year
 										? `, ${info.bio.birthday.year}`
 										: ``}
@@ -156,7 +157,7 @@
 							{#if info.bio.onFamily}
 								<p><strong>Family:</strong> {info.bio.onFamily}</p>
 							{/if}
-							{#if info.bio.secrets?.length > 0}
+							{#if info.bio.secrets && info.bio.secrets.length > 0}
 								<p><strong>Secrets:</strong></p>
 								<ul>
 									{#each info.bio.secrets as secret}
@@ -164,7 +165,7 @@
 									{/each}
 								</ul>
 							{/if}
-							{#if info.bio.trivia?.length > 0}
+							{#if info.bio.trivia && info.bio.trivia.length > 0}
 								<p><strong>Trivia:</strong></p>
 								<ul>
 									{#each info.bio.trivia as trivia}
@@ -272,7 +273,7 @@
 							{info.counterpart.record.total} Races, {info.counterpart.record.wins} Wins
 						</p>
 					{/if}
-					{#if info.counterpart.notableRaces?.length > 0}
+					{#if info.counterpart.notableRaces && info.counterpart.notableRaces.length > 0}
 						<p><strong>Notable Races:</strong></p>
 						<ul>
 							{#each info.counterpart.notableRaces as race}

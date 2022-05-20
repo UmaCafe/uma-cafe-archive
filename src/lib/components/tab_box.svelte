@@ -1,14 +1,13 @@
 <script lang="ts">
-	type Tab = {
-		label: string;
-		value: string;
-	};
+	import type { LabelValuePair } from '$lib/types/editors';
 
-	export let tabs: Array<Tab>;
+	type T = $$Generic<string>;
+
+	export let tabs: Array<LabelValuePair<T>>;
 	export let outlineColor: string = '#282';
 	export let fontColor: string = '#000';
 	export let backgroundColor: string = '#f5f5ff';
-	let value: string = tabs?.[0]?.value ?? '';
+	let value: T = tabs?.[0]?.value ?? '';
 </script>
 
 <div

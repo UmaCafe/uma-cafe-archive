@@ -3,8 +3,8 @@
 	import type { CharacterObject } from '$lib/types/character';
 	import { getContentUrl } from '$lib/util';
 
-	export let charId: string | null = null;
-	export let charInfo: CharacterObject | null = null;
+	export let charId: string | undefined = undefined;
+	export let charInfo: CharacterObject | undefined = undefined;
 	if (charId) {
 		getCharacterInfo(fetch, charId).then((val) => (charInfo = val));
 	}

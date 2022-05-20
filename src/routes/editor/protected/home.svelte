@@ -81,7 +81,7 @@
 <Metadata title="Editor Home" description="Landing page for editors" />
 
 <h1>Editor Home</h1>
-<p>Logged in as: {$session.editor.name}</p>
+<p>Logged in as: {$session.editor?.name}</p>
 
 <div class="creation">
 	<div class="characters">

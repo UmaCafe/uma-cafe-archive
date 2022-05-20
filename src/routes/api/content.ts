@@ -3,7 +3,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ url }) => {
 	if (url.searchParams.has('page')) {
-		const page = url.searchParams.get('page');
+		const page = url.searchParams.get('page') as string;
 		const md = await getPageMarkdown(page);
 		if (md) {
 			return {

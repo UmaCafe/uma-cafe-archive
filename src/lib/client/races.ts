@@ -15,7 +15,7 @@ export async function getAllRaces(fetch: Fetch): Promise<Map<string, RaceObject>
 	return new Map();
 }
 
-export async function getRaceInfo(fetch: Fetch, raceId: string): Promise<RaceObject | null> {
+export async function getRaceInfo(fetch: Fetch, raceId: string): Promise<RaceObject | undefined> {
 	const raceData = get(RACE_DATA);
 	if (raceData.has(raceId)) {
 		return raceData.get(raceId);
@@ -30,5 +30,4 @@ export async function getRaceInfo(fetch: Fetch, raceId: string): Promise<RaceObj
 			return data;
 		}
 	}
-	return null;
 }

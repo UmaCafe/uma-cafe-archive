@@ -13,4 +13,5 @@ export async function listContentObjects(
 	if (resp.status == 200) {
 		return await resp.json();
 	}
+	return [];
 }
