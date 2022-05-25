@@ -1,9 +1,9 @@
-<script type="ts">
+<script lang="ts">
 	import { session } from '$app/stores';
 	import ParticleComponent from '$lib/components/particle_component.svelte';
-	import type { EditorObject } from '$lib/types/editors';
+	import type { EditorObject } from '$lib/permissions';
 
-	let editor: EditorObject = $session.editor;
+	let editor: EditorObject | undefined = $session.editor;
 </script>
 
 <nav>
@@ -30,8 +30,8 @@
 			<div class="right">
 				{#if editor}
 					<span>Editor: {editor.name}</span>
-					<a href="/editor/protected/home">Editor Home</a>
-					<a href="/api/auth/logout" rel="external">Logout</a>
+					<a href="/editor/home">Editor Home</a>
+					<a href="/editor/logout" rel="external">Logout</a>
 				{:else}
 					<a href="/editor/login">Editor Login</a>
 				{/if}

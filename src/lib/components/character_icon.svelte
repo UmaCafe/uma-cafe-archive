@@ -1,36 +1,36 @@
 <script lang="ts">
-	import { getCharacterInfo } from '$lib/client/characters';
-	import type { CharacterObject } from '$lib/types/character';
+	import type { BaseObject } from '$lib/data/base/objects';
+	import type { Character } from '$lib/data/character';
 	import { getContentUrl } from '$lib/util';
+	import { onMount } from 'svelte';
 
-	export let charId: string | null = null;
-	export let charInfo: CharacterObject | null = null;
-	if (charId) {
-		getCharacterInfo(fetch, charId).then((val) => (charInfo = val));
-	}
+	export let character: BaseObject<Character>;
 
 	let nameBox: HTMLSpanElement;
 	let nameSize = 16;
-	$: while (nameSize > 1 && nameBox?.offsetHeight > 24) {
+	let overflow = true;
+	onMount(() => {
+		overflow = false; // overflow only on if JS is disabled
+	});
+	$: while (nameSize > 8 && nameBox?.scrollWidth > 136) {
 		nameSize = nameSize - 1;
 		nameBox.style.fontSize = nameSize + 'px';
+		overflow = false;
 	}
 </script>
 
-{#if charInfo}
-	<div
-		class="icon-box"
-		style="--color-main: #{charInfo.info.colors?.main ?? 'ddf'}; --color-sub: #{charInfo.info.colors
-			?.sub ?? 'ccd'};"
-	>
-		<div class="img-box">
-			<img src={getContentUrl(charInfo.images.icon)} alt="" width="140" height="140" />
-		</div>
-		<div class="capt-box">
-			<span bind:this={nameBox}>{charInfo.info.name.translated}</span>
-		</div>
+<div
+	class="icon-box"
+	style="--color-main: #{character.colors?.main ?? 'ddf'}; --color-sub: #{character.colors?.sub ??
+		'ccd'};"
+>
+	<div class="img-box">
+		<img src={getContentUrl(character.imageIcon)} alt="" width="140" height="140" />
 	</div>
-{/if}
+	<div class="capt-box">
+		<div bind:this={nameBox} class:overflow>{character.name?.en}</div>
+	</div>
+</div>
 
 <style>
 	.icon-box {
@@ -78,15 +78,25 @@
 	}
 
 	.capt-box {
+		width: 136px;
+		height: 24px;
 		border-top: 3px solid var(--color-main);
-		padding: 5px;
+		padding: 4px 2px;
 		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 
-	.capt-box span {
+	.capt-box div {
 		font-weight: bold;
 		color: #334;
-		width: 100%;
-		word-break: break-all;
+		max-width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.capt-box div.overflow {
+		text-overflow: ellipsis;
 	}
 </style>

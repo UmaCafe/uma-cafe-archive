@@ -2,10 +2,10 @@
 	import { getStores } from '$app/stores';
 	let { page } = getStores();
 
-	export let title: string;
-	export let description: string;
+	export let title: string | undefined = undefined;
+	export let description: string | undefined = undefined;
 	export let rawDescription: boolean = false;
-	export let image: string = undefined;
+	export let image: string | undefined = undefined;
 
 	$: url = `${$page.url.href}`;
 	$: displayTitle = title ? `${title} - Uma Cafe` : `Uma Cafe`;

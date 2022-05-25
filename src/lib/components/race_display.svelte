@@ -1,41 +1,33 @@
 <script lang="ts">
-	import { getRaceInfo } from '$lib/client/races';
-	import type { RaceObject } from '$lib/types/race';
+	import type { BaseObject } from '$lib/data/base/objects';
+	import type { Race } from '$lib/data/races';
 
-	export let raceId: string | null = null;
-	export let raceInfo: RaceObject | null = null;
-	if (raceId) {
-		getRaceInfo(fetch, raceId).then((val) => (raceInfo = val));
-	}
+	export let raceInfo: BaseObject<Race>;
 
 	function trackString() {
-		const trackInfo = raceInfo.info.trackInfo;
-		const trackType = {
-			turf: 'Turf',
-			dirt: 'Dirt'
-		}[trackInfo.trackType];
-		const direction = {
-			cw: 'CW',
-			ccw: 'CCW'
-		}[trackInfo.direction];
-		return `${trackInfo.trackName} - ${trackInfo.distance}m (${trackType}, ${direction})`;
+		let str = '';
+		if (raceInfo.trackName) str += `${raceInfo.trackName} - `;
+		if (raceInfo.trackDistance) str += `${raceInfo.trackDistance}m `;
+		if (raceInfo.trackType || raceInfo.trackDirection) str += '(';
+		if (raceInfo.trackType) str += `${raceInfo.trackType}, `;
+		if (raceInfo.trackDirection) str += `${raceInfo.trackDirection}`;
+		if (raceInfo.trackType || raceInfo.trackDirection) str += ')';
+		return str.length > 0 ? str : undefined;
 	}
 </script>
 
-{#if raceInfo}
-	<div class="race">
-		<img class="logo" src={raceInfo.images.thumb} alt="" />
-		<div class="info">
-			<h2>{raceInfo.info.name.translated}</h2>
-			{#if raceInfo.info.trackInfo}
-				<h3>{trackString()}</h3>
-			{/if}
-			{#if raceInfo.info.raceInfo}
-				<h3>{raceInfo.info.raceInfo.raceTimeDescription}</h3>
-			{/if}
-		</div>
+<div class="race">
+	<img class="logo" src={raceInfo.imageThumb} alt="" />
+	<div class="info">
+		<h2>{raceInfo.name?.en}</h2>
+		{#if trackString()}
+			<h3>{trackString()}</h3>
+		{/if}
+		{#if raceInfo.raceTimeDescription}
+			<h3>{raceInfo.raceTimeDescription}</h3>
+		{/if}
 	</div>
-{/if}
+</div>
 
 <style>
 	.race {

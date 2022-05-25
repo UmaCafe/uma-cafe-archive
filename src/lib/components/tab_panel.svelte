@@ -1,28 +1,25 @@
 <script lang="ts">
-	type Tab = {
-		label: string;
-		value: string;
-	};
+	import type { KVPair } from '$lib/util';
 
-	export let tabs: Array<Tab>;
+	export let tabs: KVPair[];
 	export let panelColor: string = '#282';
-	let value: string = tabs?.[0]?.value ?? '';
+	let key: string = tabs?.[0]?.key ?? '';
 </script>
 
 <div class="tab-panel" style:--panel-color={panelColor} {...$$restProps}>
 	<ul class="tab-list">
 		{#each tabs as tab}
-			<li class:active={tab.value === value}>
+			<li class:active={tab.key === key}>
 				<button
 					on:click={() => {
-						value = tab.value;
-					}}>{tab.label}</button
+						key = tab.key;
+					}}>{tab.val}</button
 				>
 			</li>
 		{/each}
 	</ul>
 	<div class="tab-content">
-		<slot {value} />
+		<slot {key} />
 	</div>
 </div>
 
@@ -33,7 +30,7 @@
 		position: relative;
 		margin: 0;
 		padding: 0;
-        margin-bottom: 10px;
+		margin-bottom: 10px;
 		justify-content: center;
 	}
 

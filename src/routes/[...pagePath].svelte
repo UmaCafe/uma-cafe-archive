@@ -1,29 +1,20 @@
-<script lang="ts" context="module">
-	import { getPageMarkdown } from '$lib/client/pages';
+<script lang="ts">
+	import { page, session } from '$app/stores';
 	import TokenRenderer from '$lib/components/markdown/token_renderer.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import type { Load } from '@sveltejs/kit';
+	import { fromJson } from '$lib/data/base/objects';
+	import type { Page } from '$lib/data/page';
+	import { hasPermission } from '$lib/permissions';
+	import { docIdToPagePath, isPreview } from '$lib/util';
 	import frontmatter from 'front-matter';
 	import marked from 'marked';
 
-	export const load: Load = async ({ fetch, params }) => {
-		let path = params.pagePath;
-		const markdown = await getPageMarkdown(fetch, path);
-		if (markdown) {
-			return {
-				props: {
-					markdown
-				}
-			};
-		}
-		return { error: 'Page not found', status: 404 };
-	};
-</script>
+	export let pageJson: string;
 
-<script lang="ts">
-	export let markdown: string;
+	let pageObj = fromJson<Page>(pageJson);
+	$: pageObj = fromJson<Page>(pageJson);
 
-	$: data = frontmatter(markdown);
+	$: data = frontmatter(pageObj.md ?? '');
 
 	type PageAttribs = {
 		layout?: 'raw' | undefined;
@@ -41,6 +32,13 @@
 <div class="md">
 	<TokenRenderer tokens={lexed} />
 </div>
+{#if $session.editor && hasPermission($session.editor, 'editor.edit.pages') && !isPreview()}
+	<div style="text-align:right;">
+		<a href="/editor/pages/{$page.params.pagePath.length == 0 ? 'index' : $page.params.pagePath}"
+			>Edit this page</a
+		>
+	</div>
+{/if}
 
 <style>
 	.md {

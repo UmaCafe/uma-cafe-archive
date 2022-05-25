@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import './particle_component.css';
 
 	let ParticlesComponent: unknown;
 	onMount(async () => {
@@ -74,16 +75,3 @@
 		detectRetina: !0
 	}}
 />
-
-<style>
-	:global(#tsparticles) {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		padding: 0;
-		margin: 0;
-		z-index: -1;
-	}
-</style>

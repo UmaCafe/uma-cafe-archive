@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let mainColor: string = undefined;
-	export let subColor: string = undefined;
-	export let topBackgroundColor: string = undefined;
-	export let bottomBackgroundColor: string = undefined;
+	export let mainColor: string | undefined = undefined;
+	export let subColor: string | undefined = undefined;
+	export let topBackgroundColor: string | undefined = undefined;
+	export let bottomBackgroundColor: string | undefined = undefined;
 </script>
 
 <div

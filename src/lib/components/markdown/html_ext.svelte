@@ -13,7 +13,7 @@
 
 	afterUpdate(() => {
 		const placehold = wrap.querySelector('.placehold');
-		if (placehold) placehold.parentNode.replaceChild(content, placehold);
+		if (placehold) placehold.parentNode?.replaceChild(content, placehold);
 	});
 </script>
 
