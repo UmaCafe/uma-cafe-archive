@@ -5,7 +5,11 @@ import { listContentObjects } from '$lib/server/editor';
 import { docIdToPagePath } from '$lib/util';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const get: RequestHandler = async () => {
+export const get: RequestHandler = async ({ params }) => {
+	// Having no route parameters absolutely broke this page but ONLY when building.
+	// I have no idea why this bug exists. But it does.
+	if (params.index.length > 0) return { status: 404 };
+
 	const chars = await loadAllFromDatabase(Character, { ignoreDynamic: true });
 	const pagePaths = (await loadIdListFromDatabase(Page)).map((v) => docIdToPagePath(v));
 	const imageObjects = await listContentObjects('images/');

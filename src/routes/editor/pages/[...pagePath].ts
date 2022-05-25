@@ -12,7 +12,8 @@ export const get: RequestHandler = async ({ params }) => {
 			body: { pageJson: JSON.stringify(page), path, type: page._type, id: page.id }
 		};
 	}
+
 	return {
-		fallthrough: true
+		status: 404
 	};
 };
