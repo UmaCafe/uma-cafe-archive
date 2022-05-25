@@ -5,7 +5,7 @@
 	import { fromJson } from '$lib/data/base/objects';
 	import type { Page } from '$lib/data/page';
 	import { hasPermission } from '$lib/permissions';
-	import { docIdToPagePath, isPreview } from '$lib/util';
+	import { isPreview } from '$lib/util';
 	import frontmatter from 'front-matter';
 	import marked from 'marked';
 

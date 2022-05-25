@@ -1,11 +1,9 @@
-<script lang="ts" context="module">
+<script lang="ts">
 	import Metadata from '$lib/components/metadata.svelte';
 	import RaceDisplay from '$lib/components/race_display.svelte';
-	import type { RaceObject } from '$lib/types/race';
-</script>
-
-<script lang="ts">
-	export let races: RaceObject[];
+	import type { BaseObject } from '$lib/data/base/objects';
+	import type { Race } from '$lib/data/races';
+	export let races: BaseObject<Race>[] = [];
 </script>
 
 <Metadata title="Race List" description="List of JRA Races that are used in the Uma Musume game." />

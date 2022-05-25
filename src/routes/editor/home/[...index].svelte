@@ -8,8 +8,8 @@
 	import { hasPermission } from '$lib/permissions';
 	import type { ListedContentObject } from '$lib/server/editor';
 	import { getContentUrl, pagePathToDocId } from '$lib/util';
-	import type { EditDeleteRequest } from '../api/edit';
-	import type { FilesDeleteRequest } from '../api/files';
+	import type { EditDeleteRequest } from '../../api/edit';
+	import type { FilesDeleteRequest } from '../../api/files';
 
 	export let charListJson: string[];
 	export let pagePaths: string[];

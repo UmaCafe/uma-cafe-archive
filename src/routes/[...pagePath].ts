@@ -13,6 +13,6 @@ export const get: RequestHandler = async ({ params }) => {
 		};
 	}
 	return {
-		fallthrough: true
+		status: 404
 	};
 };
