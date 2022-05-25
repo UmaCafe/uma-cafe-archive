@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { FIREBASE_APP } from '$lib/client/external/firebase';
+	import { goto } from '$app/navigation';
 	import Metadata from '$lib/components/metadata.svelte';
+	import { FIREBASE_APP } from '$lib/firebase';
 	import { getAuth, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 
 	function submitLogin() {
@@ -12,10 +13,10 @@
 				return creds.user.getIdToken();
 			})
 			.then((idToken) => {
-				return fetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ idToken }) });
+				return fetch('/api/login', { method: 'POST', body: JSON.stringify({ idToken }) });
 			})
 			.then((_resp) => {
-				window.location.href = '/editor/protected/home';
+				return goto('/editor/home');
 			})
 			.catch((reason) => {
 				let errorCode: string = reason?.code;

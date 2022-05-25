@@ -1,6 +1,6 @@
 /// <reference types="@sveltejs/kit" />
 
-import type { EditorObject } from './lib/types/editors';
+import type { EditorObject } from '$lib/permissions';
 
 declare global {
 	namespace App {
@@ -12,3 +12,5 @@ declare global {
 		}
 	}
 }
+
+export type Fetch = (info: RequestInfo, init?: RequestInit) => Promise<Response>;

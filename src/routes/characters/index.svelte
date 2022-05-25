@@ -1,22 +1,11 @@
-<script lang="ts" context="module">
-	import { getAllCharacters } from '$lib/client/characters';
+<script lang="ts">
 	import CharacterIcon from '$lib/components/character_icon.svelte';
 	import Metadata from '$lib/components/metadata.svelte';
-	import type { CharacterObject } from '$lib/types/character';
-	import type { Load } from '@sveltejs/kit';
+	import { fromJson } from '$lib/data/base/objects';
+	import type { Character } from '$lib/data/character';
 
-	export const load: Load = async ({ fetch }) => {
-		const chars = await getAllCharacters(fetch);
-		return {
-			props: {
-				chars
-			}
-		};
-	};
-</script>
-
-<script lang="ts">
-	export let chars: Map<string, CharacterObject>;
+	export let characterJsonList: string[];
+	export let characters = characterJsonList.map((json) => fromJson<Character>(json));
 </script>
 
 <Metadata title="Character List" description="List of Uma Musume characters." />
@@ -24,11 +13,11 @@
 <div class="char-container">
 	<h1>Characters</h1>
 	<div class="char-list">
-		{#each [...chars] as [charId, charInfo]}
+		{#each characters as character}
 			<div class="char">
-				<a href={`/characters/${charId}`}>
+				<a href={`/characters/${character.id}`}>
 					<div class="inner">
-						<CharacterIcon {charInfo} />
+						<CharacterIcon {character} />
 					</div>
 				</a>
 			</div>

@@ -1,13 +1,11 @@
 <script lang="ts">
-	import type { LabelValuePair } from '$lib/types/editors';
+	import type { KVPair } from '$lib/util';
 
-	type T = $$Generic<string>;
-
-	export let tabs: Array<LabelValuePair<T>>;
+	export let tabs: Array<KVPair>;
 	export let outlineColor: string = '#282';
 	export let fontColor: string = '#000';
 	export let backgroundColor: string = '#f5f5ff';
-	let value: T = tabs?.[0]?.value ?? '';
+	let key: string = tabs?.[0]?.key ?? '';
 </script>
 
 <div
@@ -19,18 +17,18 @@
 >
 	<ul class="tab-list">
 		{#each tabs as tab}
-			<li class:active={tab.value === value}>
+			<li class:active={tab.key === key}>
 				<button
 					on:click={() => {
-						value = tab.value;
-					}}>{tab.label}</button
+						key = tab.key;
+					}}>{tab.val}</button
 				>
 				<div class="extra" />
 			</li>
 		{/each}
 	</ul>
 	<div class="tab-content">
-		<slot {value} />
+		<slot {key} />
 	</div>
 </div>
 

@@ -1,11 +1,12 @@
-import type { EditorObject } from '$lib/types/editors';
+import { DatabaseObject, OBJECT_BY_TYPE } from '$lib/data/base/objects';
+import { deleteFromDatabase, saveToDatabase, updateDatabaseObject } from '$lib/data/base/server';
+import type { EditorObject } from '$lib/permissions';
+import { hasPermission } from '$lib/permissions';
 import type { ChangeInstance } from '$lib/util';
 import * as cookie from 'cookie';
-import { FieldValue } from 'firebase-admin/firestore';
-import { hasPermission } from '../editor/permissions';
-import { getUserIdFromSession } from './external/firebaseAuth';
-import { editorsDb, getCollection } from './external/firestore';
-import { listObjects } from './external/s3';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getUserIdFromSession } from './firebase-auth';
+import { listObjects } from './s3';
 
 export async function authEditorWithRequest(request: Request): Promise<EditorObject | undefined> {
 	const session = getSessionFromRequest(request);
@@ -29,63 +30,49 @@ export async function authEditorWithSession(session: string): Promise<EditorObje
 }
 
 export async function getEditorFromUid(uid: string): Promise<EditorObject | undefined> {
-	const editors = await editorsDb();
+	const editors = getFirestore().collection('editors');
 	const obj = await editors.where('uid', '==', uid).get();
 	if (obj.empty) return;
 	const doc = obj.docs[0];
 	if (!doc.exists) return;
-	return doc.data();
+	return doc.data() as EditorObject;
 }
 
-export async function makeEdit(
+export async function editObject(
 	session: string,
-	collection: string,
-	doc: string,
+	type: string,
+	id: string,
 	changes: ChangeInstance[]
 ): Promise<boolean> {
 	const editor = await authEditorWithSession(session);
-	if (editor && hasPermission(editor, 'editor.edit.' + collection)) {
-		const docRef = (await getCollection(collection)).doc(doc);
-		const data: Record<string, unknown> = {};
-		for (const change of changes) {
-			data[change.key] = change.after;
-		}
-		await docRef.update(data);
-		await docRef.collection('changes').add({
-			madeBy: editor.name,
-			at: FieldValue.serverTimestamp(),
-			changes: changes
-		});
-		return true;
+	if (editor && hasPermission(editor, 'editor.edit.' + type)) {
+		const obj = OBJECT_BY_TYPE.get(type) ?? DatabaseObject;
+		return updateDatabaseObject(editor, new obj(id), changes);
 	}
 	return false;
 }
 
-export async function createBasic(
+export async function createObject(
 	session: string,
-	collection: string,
-	doc: string,
-	data: unknown
+	type: string,
+	id: string,
+	data: Record<string, unknown>
 ): Promise<boolean> {
 	const editor = await authEditorWithSession(session);
-	if (hasPermission(editor, 'editor.create.' + collection)) {
-		const docRef = (await getCollection(collection)).doc(doc);
-		await docRef.create(data);
-		return true;
+	if (hasPermission(editor, 'editor.create.' + type)) {
+		const obj = OBJECT_BY_TYPE.get(type) ?? DatabaseObject;
+		const val = new obj(id);
+		Object.assign(val, data);
+		return await saveToDatabase(val);
 	}
 	return false;
 }
 
-export async function deleteBasic(
-	session: string,
-	collection: string,
-	doc: string
-): Promise<boolean> {
+export async function deleteObject(session: string, type: string, id: string): Promise<boolean> {
 	const editor = await authEditorWithSession(session);
-	if (hasPermission(editor, 'editor.delete.' + collection)) {
-		const docRef = (await getCollection(collection)).doc(doc);
-		await docRef.firestore.recursiveDelete(docRef);
-		return true;
+	if (hasPermission(editor, 'editor.delete.' + type)) {
+		const obj = OBJECT_BY_TYPE.get(type) ?? DatabaseObject;
+		return await deleteFromDatabase(new obj(id));
 	}
 	return false;
 }
