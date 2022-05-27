@@ -32,6 +32,9 @@ export class Character extends DatabaseObject {
 	@String()
 	assetId?: string;
 
+	@Desc(
+		'Grab from the official website. Should be a 6-character long hex code, without the leading # (eg "abcdef")'
+	)
 	@Record({ main: 'string', sub: 'string' })
 	colors?: { main: string; sub: string };
 
@@ -147,6 +150,7 @@ export class Character extends DatabaseObject {
 	@MakeArray()
 	trivia?: string[];
 
+	@Desc('For the english name, write in order of Given then Family name. (First Last)')
 	@Translated()
 	seiyuuName?: TranslatedString;
 
