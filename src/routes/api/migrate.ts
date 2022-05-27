@@ -4,8 +4,8 @@ import { Page } from '$lib/data/page';
 import type { RequestHandler } from '@sveltejs/kit';
 import { getFirestore, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-const chars = true;
-const pages = true;
+const chars = false;
+const pages = false;
 const changes = false;
 export const get: RequestHandler = async () => {
 	if (chars) {

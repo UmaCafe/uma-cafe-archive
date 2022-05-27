@@ -25,7 +25,7 @@
 		<hr />
 		<div class="footer-content">
 			<div class="left">
-				<a href="mailto:snep@uma.cafe">Contact</a>
+				<a href="mailto:help@uma.cafe">Contact</a>
 			</div>
 			<div class="right">
 				{#if editor}
